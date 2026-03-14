@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TS Game Store</title>
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="manifest" href="site.webmanifest">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a14;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+header{background:linear-gradient(135deg,#1a1a2e,#2d2d4e);padding:14px 14px 12px;position:sticky;top:0;z-index:99;box-shadow:0 4px 24px rgba(0,0,0,.55)}
+.hrow{display:flex;align-items:center;justify-content:space-between;max-width:720px;margin:0 auto 11px}
+.hlogo{display:flex;align-items:center;gap:10px}
+.hlogo img{height:42px;width:42px;border-radius:10px;object-fit:contain;background:#000;padding:2px}
+.htxt h1{font-size:18px;font-weight:900;line-height:1.1}
+.htxt small{font-size:11px;opacity:.8}
+.btnall{background:#0AB9E6;border:none;border-radius:10px;padding:8px 13px;color:#fff;font-weight:800;cursor:pointer;font-size:12px;white-space:nowrap}
+  .navtabs{max-width:100%;display:flex;gap:8px;padding-top:12px}
+.navtab{flex:1;padding:8px;border:none;border-radius:10px;font-weight:800;font-size:13px;cursor:pointer;transition:background .15s}
+.navtab.on{background:rgba(255,255,255,.25);color:#fff}
+.navtab.off{background:rgba(0,0,0,.2);color:rgba(255,255,255,.6)}
+.swrap{max-width:720px;margin:0 auto}
+#si{width:100%;padding:11px 16px;border-radius:12px;border:none;background:rgba(255,255,255,.16);color:#fff;font-size:14px;outline:none}
+#si::placeholder{color:rgba(255,255,255,.55)}
+.body{max-width:720px;margin:0 auto;padding:13px 11px}
+.gbar{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:11px;scrollbar-width:none}
+.gbar::-webkit-scrollbar{display:none}
+.gb{flex-shrink:0;padding:6px 13px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:#1a1a2e;color:#fff;font-weight:600;cursor:pointer;font-size:11px;transition:background .15s;overflow:hidden;-webkit-tap-highlight-color:transparent}
+.gb.on{background:#CC0000;border-color:#CC0000}
+.tbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
+.cnt{font-size:12px;color:#555}
+#ss{background:#1a1a2e;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:5px 9px;font-size:12px;outline:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(142px,1fr));gap:10px}
+.card{border-radius:14px;overflow:hidden;cursor:pointer;background:#1a1a2e;box-shadow:0 4px 18px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.07);transition:transform .18s}
+.card:hover{transform:translateY(-3px)}
+.cimg{position:relative;padding-top:140%;overflow:hidden}
+.cimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fall{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:10px;text-align:center}
+.fall img{width:55%;opacity:.65}
+.fall p{font-size:10px;color:#bbb;margin-top:7px;font-weight:700;line-height:1.3}
+.bg{position:absolute;top:7px;left:7px;background:rgba(0,0,0,.78);backdrop-filter:blur(4px);padding:3px 8px;border-radius:18px;font-size:9px;font-weight:700}
+.bp{position:absolute;top:7px;right:7px;background:#E60012;padding:3px 8px;border-radius:18px;font-size:10px;font-weight:900}
+.ov{position:absolute;inset:0;background:rgba(0,0,0,.91);padding:11px;display:flex;flex-direction:column;justify-content:center;gap:5px;opacity:0;transition:opacity .22s;pointer-events:none}
+.ov.on{opacity:1}
+.ovt{font-size:12px;font-weight:800;line-height:1.3}
+.ovd{font-size:10px;color:#aaa}
+.ovs{color:#FFD700;font-size:12px}
+.cfoot{padding:8px 8px 0}
+.ctit{font-size:11px;font-weight:700;line-height:1.3;margin-bottom:6px;min-height:28px}
+.cbtns{display:flex;gap:5px;padding-bottom:8px}
+.bped{flex:1;background:#CC0000;border:none;border-radius:7px;padding:7px 3px;color:#fff;font-size:10px;font-weight:900;cursor:pointer}
+.bcom{flex:1;background:#0AB9E6;border:none;border-radius:7px;padding:7px 3px;color:#fff;font-size:10px;font-weight:900;cursor:pointer}
+.empty{grid-column:1/-1;text-align:center;padding:50px 20px;color:#444}
+.empty p{font-size:15px;margin-top:10px}
+footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8px}
+@media(min-width:768px){
+  .body{max-width:100%;padding:16px 30px}
+  .swrap{max-width:100%}
+  .hrow{max-width:100%}
+}
+  .con-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:4px}
+.con-card{background:#1a1a2e;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.07);box-shadow:0 4px 18px rgba(0,0,0,.55);transition:transform .18s}
+.con-card:hover{transform:translateY(-3px)}
+.con-img{width:100%;height:180px;object-fit:contain;object-position:center;display:block;background:#0f0f1a}
+.con-img-fall{height:180px;display:flex;align-items:center;justify-content:center;background:#12122a;font-size:56px}
+.con-info{padding:14px}
+.con-name{font-size:15px;font-weight:900;margin-bottom:5px}
+.con-desc{font-size:12px;color:#aaa;margin-bottom:8px;line-height:1.5}
+.con-specs{font-size:11px;color:#ccc;margin-bottom:10px;line-height:1.6;border-left:2px solid #0AB9E6;padding-left:8px}
+.con-price{font-size:18px;font-weight:900;color:#0AB9E6;margin-bottom:12px}
+.con-stock-si{display:inline-block;background:#25D366;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;margin-bottom:10px}
+.con-stock-no{display:inline-block;background:#555;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;margin-bottom:10px}
+.con-btns{display:flex;gap:8px}
+.cbped{flex:1;background:#CC0000;border:none;border-radius:10px;padding:10px;color:#fff;font-size:12px;font-weight:900;cursor:pointer}
+.cbcom{flex:1;background:#25D366;border:none;border-radius:10px;padding:10px;color:#fff;font-size:12px;font-weight:900;cursor:pointer}
+.con-loading{text-align:center;padding:40px;color:#555;font-size:14px}
+@keyframes shine{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes borderflow{0%,100%{border-color:#0AB9E6}50%{border-color:#00e5ff}}
+.gb-new{
+  animation:shine 2.5s linear infinite, borderflow 2s ease-in-out infinite;
+  border-color:#0AB9E6 !important;
+  color:#0AB9E6 !important;
+  border-radius:30px !important;
+  padding:6px 16px !important;
+  background:linear-gradient(90deg,#0f1a2e 30%,#0AB9E620 50%,#0f1a2e 70%) !important;
+  background-size:200% auto !important;
+  box-shadow:0 0 8px rgba(0,185,230,.3),3px 3px 6px rgba(0,0,0,.5) !important;
+  font-weight:800 !important;
+  overflow:hidden !important;
+  -webkit-tap-highlight-color:transparent !important
+}
+.gb-new.on{
+  background:linear-gradient(145deg,#0AB9E6,#0090b8) !important;
+  color:#fff !important;
+  animation:none !important;
+  box-shadow:inset 2px 2px 5px rgba(0,0,0,.3) !important
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="hrow">
+    <div class="hlogo">
+      <img src="logo.png" alt="TS" onerror="this.style.display='none'"/>
+      <div class="htxt">
+        <h1>TS Game Store</h1>
+        <small id="hc">142 juegos · Nintendo Switch</small>
+      </div>
+    </div>
+    <button class="btnall" onclick="shareAll()">📤 Lista</button>
+  </div>
+  <div class="swrap">
+    <input id="si" type="text" placeholder="🔍  Buscar juego..." oninput="render()"/>
+  </div>
+  <div class="navtabs">
+    <button class="navtab on" id="tab-juegos" onclick="setTab('juegos')">🎮 Juegos</button>
+    <button class="navtab off" id="tab-consolas" onclick="setTab('consolas')">🕹️ Consolas</button>
+  </div>
+</header>
+<div class="body">
+  <!-- CONSOLAS -->
+  <div id="sec-consolas" style="display:none">
+    <div class="con-loading" id="con-loading">⏳ Cargando consolas...</div>
+    <div class="con-grid" id="congrid"></div>
+  </div>
+  <!-- JUEGOS -->
+  <div id="sec-juegos">
+    <div class="gbar" id="gbar"></div>
+    <div class="tbar">
+      <span class="cnt" id="cl"></span>
+      <select id="ss" onchange="render()">
+        <option value="az">🔤 A – Z</option>
+        <option value="rating">⭐ Rating</option>
+        <option value="genre">🎯 Género</option>
+      </select>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+  <footer>TS Game Store · Precio único: 350 CUP</footer>
+</div>
+<script>
+const WA='5355207586', PX='350 CUP';
+let aG='Todos', aCard=null, curTab='juegos';
+const SHEET_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vT2RBJAM2CAxW-PfOZCBMMWPtc3mCq429w3CY-FXtI9ZAqTbswzLKe7-hlribvwH75pyZUbHZ5YDZ88/pub?gid=0&single=true&output=tsv';
+
+function setTab(t){
+  curTab=t;
+  document.getElementById('sec-juegos').style.display=t==='juegos'?'block':'none';
+  document.getElementById('sec-consolas').style.display=t==='consolas'?'block':'none';
+  document.getElementById('si').style.display=t==='juegos'?'block':'none';
+  document.getElementById('tab-juegos').className='navtab '+(t==='juegos'?'on':'off');
+  document.getElementById('tab-consolas').className='navtab '+(t==='consolas'?'on':'off');
+  if(t==='consolas') loadConsolas();
+}
+
+function pedirConsola(n,p,e){
+  e.stopPropagation();
+  const msg=`Hola, me interesa la consola: *${n}* (${p} USD)`;
+  window.open(`https://wa.me/5355207586?text=${encodeURIComponent(msg)}`,'_blank');
+}
+function compartirConsola(n,p,d,e){
+  e.stopPropagation();
+  const msg=`🕹️ *${n}*\n💰 ${p} USD\n${d}\n\n📲 Pedidos: wa.me/5355207586`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+function loadConsolas(){
+  const cg=document.getElementById('congrid');
+  const cl=document.getElementById('con-loading');
+  if(cg.children.length>0){cl.style.display='none';return;}
+  cl.style.display='block';
+  fetch(SHEET_URL)
+    .then(r=>r.text())
+    .then(tsv=>{
+      cl.style.display='none';
+      const rows=tsv.trim().split('\n').slice(1);
+      rows.forEach(row=>{
+        const cols=row.split('\u0009');
+        const n=(cols[0]||'').trim();
+        const p=(cols[1]||'').trim();
+        const disp=(cols[2]||'').trim().toUpperCase();
+        const img=(cols[3]||'').trim();
+        const desc=(cols[4]||'').trim();
+        const specs=(cols[5]||'').trim();
+        const d=document.createElement('div');
+        d.className='con-card';
+        d.innerHTML=`
+          ${img?`<img class="con-img" src="${img}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${n}"/><div class="con-img-fall" style="display:none">🕹️</div>`:`<div class="con-img-fall">🕹️</div>`}
+          <div class="con-info">
+            <div class="con-name">${n}</div>
+            <div class="${disp==='SI'?'con-stock-si':'con-stock-no'}">${disp==='SI'?'✅ Disponible':'❌ Agotado'}</div>
+            <div class="con-desc">${desc}</div>
+            <div class="con-specs">${specs}</div>
+            <div class="con-price">${p} USD</div>
+            <div class="con-btns">
+              <button class="cbped" onclick="pedirConsola('${n}','${p}',event)">🛒 Pedir</button>
+              <button class="cbcom" onclick="compartirConsola('${n}','${p}','${desc}',event)">📤 Compartir</button>
+            </div>
+          </div>`;
+        cg.appendChild(d);
+      });
+    })
+    .catch(()=>{cl.textContent='⚠️ Error cargando consolas. Intenta de nuevo.';});
+}
+
+const G=[
+ {t:"Animal Crossing: New Horizons",g:"Simulación",r:4.9,d:"Construye la isla de tus sueños, decórala a tu gusto y vive al ritmo de la naturaleza con tus vecinos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_AnimalCrossingNewHorizons_image500w.jpg",col:"#52b788"},
+ {t:"Ashen",g:"RPG",r:4.2,d:"Explora un mundo oscuro y sin sol junto a un compañero. La cooperación es clave para sobrevivir.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_Ashen_image500w.jpg",col:"#7c6a50"},
+ {t:"Astral Chain",g:"Acción",r:4.7,d:"Controla a un agente de élite y su bestia legionaria para combatir invasiones de otra dimensión.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_AstralChain_image500w.jpg",col:"#1a1a3e"},
+ {t:"Back to the Dawn",g:"Estrategia",r:4.3,d:"Sobrevive en una prisión llena de animales peligrosos. Planifica cada movimiento para escapar.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/backtothedawn_1/1x1_BackToTheDawn_image500w.jpg",col:"#2d4a3e"},
+ {t:"Baldur's Gate: Dark Alliance",g:"RPG",r:4.0,d:"Clásico RPG de acción ambientado en los Reinos Olvidados. Elige tu héroe y lucha contra el mal.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_BaldursGateDarkAlliance_image500w.jpg",col:"#1c2a4a"},
+ {t:"Baldur's Gate: Dark Alliance 2",g:"RPG",r:4.1,d:"Continúa la aventura con nuevos héroes y mazmorras aún más peligrosas en los Reinos Olvidados.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_BaldursGateDarkAlliance2_image500w.jpg",col:"#1c3060"},
+ {t:"Baroque Syndrome",g:"RPG",r:3.8,d:"RPG de mazmorra con elementos roguelike. Desciende a un mundo distorsionado y descubre la verdad.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/baroqueshootingreversed/1x1_BaroqueShootingReversed_image500w.jpg",col:"#2a1a30"},
+ {t:"Bayonetta 3",g:"Acción",r:4.7,d:"La bruja más poderosa regresa con nuevas habilidades, transformaciones monstruosas y acción sin freno.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_Bayonetta3_image500w.jpg",col:"#c9184a"},
+ {t:"Blasphemous 2",g:"Acción",r:4.6,d:"Metroidvania oscuro y brutal inspirado en la Semana Santa. Combate impecable y arte perturbador.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_Blasphemous2_image500w.jpg",col:"#6b0f1a"},
+ {t:"Borderlands 3",g:"Shooter",r:4.5,d:"Shooter de botín con humor irreverente. Millones de armas, cooperativo y una historia disparatada.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_Borderlands3UltimateEdition_image500w.jpg",col:"#e9c46a"},
+ {t:"Bratz: Flaunt Your Fashion",g:"Simulación",r:3.0,d:"Diseña outfits, personaliza looks y conviértete en la reina de la moda con las icónicas muñecas Bratz.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_BratzFlauntYourFashion_esES_image500w.jpg",col:"#e040fb"},
+ {t:"Brotato",g:"Acción",r:4.5,d:"Sobrevive oleadas de enemigos como una papa armada hasta los dientes. Roguelike adictivo y caótico.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_Brotato_image500w.jpg",col:"#8b4513"},
+ {t:"Burnout Paradise Remastered",g:"Carreras",r:4.4,d:"Conduce a toda velocidad por Paradise City en este clásico de carreras con destrucción espectacular.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_BurnoutParadiseRemastered_image500w.jpg",col:"#c1121f"}, {t:"Call of Juarez: Gunslinger",g:"Shooter",r:4.3,c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_CallOfJuarez_image500w.jpg",col:"#7c6a50"},
+ {t:"Cars 3: Driven to Win",g:"Carreras",r:3.5,d:"Compite en circuitos inspirados en la película con tus personajes favoritos de Cars en modos para toda la familia.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_Cars3DrivenToWin_esES_image500w.jpg",col:"#e63946"},
+ {t:"Chained Echoes",g:"RPG",r:4.8,d:"RPG clásico por turnos con mechs, magia y una historia épica. Una joya indie imprescindible.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_ChainedEchoes_image500w.jpg",col:"#1a3a5c"},
+ {t:"Chickenhare and the Treasure of Spiking-beard",g:"Aventura",r:3.8,d:"Plataformas de aventura con el carismático Chickenhare en busca de un legendario tesoro pirata.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/chickenhareandthetreasureofspikingbeard/1x1_ChickenhareAndTheTreasureOfSpikingBeard_ES_image500w.jpg",col:"#5c4033"},
+ {t:"Cities: Skylines",g:"Simulación",r:4.3,d:"Construye y administra tu propia ciudad desde cero. El simulador urbano más completo en Switch.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_CitySkylinesNintendoSwitchEdition_image500w.jpg",col:"#3d8bcd"},
+ {t:"Civilization VI",g:"Estrategia",r:4.5,d:"Construye el imperio más poderoso de la historia. Estrategia por turnos adictiva desde la antigüedad al futuro.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_SidMeiersCivilizationVI_image500w.jpg",col:"#2d6a4f"},
+ {t:"Civilization VII",g:"Estrategia",r:4.4,d:"La nueva entrega de la saga redefine la estrategia con eras históricas y mecánicas renovadas.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_SidMeiersCivilizationVII_image500w.jpg",col:"#1b4332"},
+ {t:"Crash Bandicoot 4: It's About Time",g:"Plataformas",r:4.6,d:"Crash regresa con nuevas dimensiones, máscaras cuánticas y los niveles más desafiantes de la saga.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_CrashBandicoot4ItsAboutTime_image500w.jpg",col:"#e9822c"},
+ {t:"Crysis 3 Remastered",g:"Shooter",r:4.1,d:"Shooter en primera persona con un nanotraje de combate. Táctica, sigilo y acción en un futuro devastado.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_Crysis3Remastered_image500w.jpg",col:"#2d6a4f"},
+ {t:"Cult of the Lamb",g:"Acción",r:4.7,d:"Funda tu propio culto, recluta seguidores y conquista mazmorras en este roguelike oscuro y adictivo.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_CultOfTheLamb_image500w.jpg",col:"#4a1942"},
+ {t:"Cuphead",g:"Plataformas",r:4.8,d:"Plataformas de dificultad extrema con arte animado de los años 30. Un desafío visual y jugable único.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_Cuphead_image500w.jpg",col:"#d62828"},
+ {t:"Dark Souls Remastered",g:"RPG",r:4.9,d:"El RPG de acción más desafiante jamás creado. Muere, aprende y supera un mundo oscuro implacable.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_DarkSoulsRemastered_image500w.jpg",col:"#1a1a1a"},
+ {t:"DC Super Hero Girls: Teen Power",g:"Aventura",r:3.5,d:"Juega como Wonder Woman, Batichica y más heroínas de DC en aventuras de acción para toda la familia.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_DCSuperHeroGirlsTeenPower_image500w.jpg",col:"#1a1aff"},
+ {t:"Death's Door",g:"Acción",r:4.8,d:"Juega como un cuervo recolector de almas en un mundo misterioso lleno de jefes y secretos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_DeathsDoor_image500w.jpg",col:"#1a1a2e"},
+ {t:"Demon Slayer: The Hinokami Chronicles 2",g:"Pelea",r:4.5,d:"Revive los arcos más épicos del anime con combates espectaculares y personajes fieles al original.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/demonslayerkimetsunoyaibathehinokamichronicles2/1x1_DemonSlayerKimetsuNoYaibaTheHinokamiChronicles2_ESes_image500w.jpg",col:"#c1121f"},
+ {t:"Diablo III: Eternal Collection",g:"RPG",r:4.6,d:"Mata demonios, saquea mazmorras y hazte más poderoso en este clásico del hack and slash.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_DiabloIIIEternalCollection_image500w.jpg",col:"#6b0f1a"},
+ {t:"Dispatch",g:"Acción",r:3.8,d:"Gestiona un equipo de emergencias en tiempo real. Cada decisión importa para salvar vidas.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/dispatch/1x1_Dispatch_image500w.jpg",col:"#2a2a3e"},
+ {t:"Don't Starve Together",g:"Supervivencia",r:4.5,d:"Sobrevive en un mundo oscuro y extraño junto a un amigo. Recolecta, construye y no te vuelvas loco.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_DontStarveTogether_image500w.jpg",col:"#1a1a0a"},
+ {t:"Donkey Kong Country: Tropical Freeze",g:"Plataformas",r:4.8,d:"DK y sus amigos recuperan su isla de los Snowmads en uno de los mejores plataformas de Nintendo.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_DonkeyKongCountryReturnsHD_image500w.jpg",col:"#e9822c"},
+ {t:"Dragon Ball: Sparking Zero",g:"Pelea",r:4.6,d:"El regreso del legendario Budokai Tenkaichi. Batallas épicas con más de 180 personajes del universo Dragon Ball.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/dragonballsparkingzero/1x1_DragonBallSparkingZero_image500w.jpg",col:"#e9c46a"},
+ {t:"Dragon Quest VII: Reimagined",g:"RPG",r:4.5,d:"Reconstruye un mundo perdido fragmento a fragmento en este épico RPG de turnos reimaginado.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/dragonquestviireimagined/1x1_DragonQuestVIIReimagined_image500w.jpg",col:"#1a3a7a"},
+ {t:"Dragon Quest XI S: Echoes of an Elusive Age",g:"RPG",r:4.9,d:"La aventura RPG definitiva. Historia emotiva, mundo enorme y combates por turnos perfectamente ejecutados.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_DragonQuestXI_esES_image500w.jpg",col:"#1a3a7a"},
+ {t:"EA Sports FC 23",g:"Deportes",r:4.0,d:"La primera entrega bajo el nombre EA Sports FC. Fútbol auténtico con licencias oficiales, Ultimate Team y modos carrera.",c:"img/ea-fc23.png",col:"#023e8a"},
+ {t:"EA Sports FC 26",g:"Deportes",r:4.2,d:"La última entrega del fútbol de EA con plantillas actualizadas, nuevos modos y jugabilidad refinada.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/easportsfc26_1/1x1_NintendoSwitch_EaSportsFc26_image500w.jpg",col:"#023e8a"},
+ {t:"Final Fantasy VI",g:"RPG",r:4.8,d:"Una de las mejores historias de la saga. Terra, Locke y sus aliados luchan contra el tirano Kefka en un mundo steampunk.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_FinalFantasyVI_image500w.jpg",col:"#1a1a5c"},
+ {t:"Fire Emblem Engage",g:"Estrategia",r:4.6,d:"Invoca a héroes legendarios de la saga y lidera batallas tácticas épicas para salvar el continente de Elyos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_FireEmblemEngage_EU_image500w.jpg",col:"#c1121f"},
+ {t:"Grand Theft Auto: San Andreas - Definitive Edition",g:"Acción",r:3.8,d:"El clásico de Rockstar remasterizado. CJ regresa a Los Santos en una historia de crimen, traición y redención.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_GrandTheftAutoTheTrilogyTheDefinitiveEdition_image500w.jpg",col:"#2d6a4f"},
+ {t:"GRID Autosport",g:"Carreras",r:4.4,d:"Simulador de carreras con múltiples disciplinas. Turismos, monoplazas, resistencia y más en circuitos reales.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_GridAutosport_image500w.jpg",col:"#e63946"},
+ {t:"Hades",g:"Acción",r:5.0,d:"Escapa del inframundo griego en este roguelike perfecto. Combate fluido, historia profunda y rejugabilidad infinita.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_Hades_image500w.png",col:"#6b0f1a"},
+ {t:"Hades 2",g:"Acción",r:4.8,d:"La secuela supera al original. Melinoe desciende al inframundo con nuevas armas, hechizos y secretos por descubrir.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_2_games/hadesii/1x1_NSwitch2_HadesII_updated_image500w.jpg",col:"#4a1942"},
+ {t:"Heave Ho",g:"Multijugador",r:4.0,d:"Agárrate de tus amigos literalmente para no caer al vacío. Multijugador local caótico y muy divertido.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_HeaveHo_image500w.jpg",col:"#e9c46a"},
+ {t:"Hellblade: Senua's Sacrifice",g:"Acción",r:4.7,d:"Viaje psicológico oscuro e impactante. Senua lucha contra demonios reales e imaginarios en un mundo nórdico brutal.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_HellbladeSenuasSacrifice_image500w.jpg",col:"#1a1a1a"},
+ {t:"Hitman Absolution",g:"Acción",r:4.2,d:"El Agente 47 abandona la Agencia para proteger a una joven. Sigilo, disfraz y eliminaciones creativas.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/hitmanabsolution/1x1_HitmanAbsolution_image500w.jpg",col:"#c1121f"},
+ {t:"Hogwarts Legacy",g:"RPG",r:4.7,d:"Vive tu propia historia en el mundo mágico de Harry Potter. Explora Hogwarts, aprende hechizos y descubre secretos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_HogwartsLegacy_image500w.jpg",col:"#2d6a4f"},
+ {t:"Hollow Knight",g:"Acción",r:5.0,d:"Explora un vasto reino subterráneo de insectos. Metroidvania oscuro, desafiante y de una belleza artística única.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/wii_u_download_software_3/SQ_WiiUDS_HollowKnight_image500w.jpg",col:"#1d3557"},
+ {t:"Hollow Knight: Silksong",g:"Acción",r:4.8,d:"Hornet protagoniza su propia aventura en un reino misterioso lleno de nuevos enemigos y habilidades.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/hollowknightsilksong/1x1_HollowKnightSilksong_image500w.jpg",col:"#2d4a3e"},
+ {t:"Hot Wheels Unleashed",g:"Carreras",r:4.3,d:"Conduce los coches miniatura más icónicos en pistas espectaculares. Velocidad, saltos y derrapes a escala.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_HotWheelsUnleashed_image500w.jpg",col:"#e9822c"},
+ {t:"Hunt the Night",g:"Acción",r:4.2,d:"RPG de acción con estética oscura y pixelada. Combate brutal y exploración en un mundo maldito.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/huntthenight/1x1_HuntTheNight_image500w.jpg",col:"#1a1a2e"},
+ {t:"Immortals Fenyx Rising",g:"Aventura",r:4.4,d:"Aventura en mundo abierto inspirada en la mitología griega. Combate, puzzles y humor en un mundo colorido.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_ImmortalisFenixRising_image500w.jpg",col:"#2d6a9f"},
+ {t:"It Takes Two",g:"Aventura",r:5.0,d:"El mejor juego cooperativo de los últimos años. Dos jugadores deben trabajar juntos en situaciones imposibles y emotivas.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_ItTakesTwo_image500w.jpg",col:"#e9822c"},
+ {t:"Jujutsu Kaisen: Cursed Clash",g:"Pelea",r:4.0,d:"Lucha con los hechiceros del popular anime en batallas 2v2 espectaculares con técnicas malditas devastadoras.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_JujutsuKaisenCursedClash_image500w.jpg",col:"#1a1a1a"}, {t:"Kingdom Come: Deliverance - Royal Edition",g:"RPG",r:4.6,c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_KingdomComeDeliveranceRoyalEdition_image500w.jpg",col:"#5c4033"},
+ {t:"Kirby and the Forgotten Land",g:"Plataformas",r:4.8,d:"Kirby explora un mundo postapocalíptico y descubre su poder de tragar objetos enteros. Aventura encantadora y colorida.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_KirbyAndTheForgottenLand_onlylogo_esES_image500w.jpg",col:"#ff85a1"},
+{t:"Kirby's Return to Dream Land Deluxe",g:"Plataformas",r:4.6,d:"Kirby y sus amigos ayudan a reparar una nave espacial en este plataformas cooperativo clásico remasterizado.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_KirbysReturnToDreamLandDeluxe_image500w.jpg",col:"#ff69b4"},
+{t:"LEGO Horizon Adventures",g:"Aventura",r:4.2,d:"Aloy y el mundo de Horizon Zero Dawn en versión LEGO. Acción cooperativa divertida para todas las edades.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/legohorizonadventures/1x1_LEGOHorizonAdventures_image500w.jpg",col:"#e9c46a"},
+{t:"LEGO Marvel Super Heroes 2",g:"Aventura",r:4.3,d:"Viaja por el tiempo y el espacio con tus superhéroes Marvel favoritos en versión LEGO. Cooperativo y muy divertido.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_LegoMarvelSuperHeroes2_image500w.jpg",col:"#e63946"},
+{t:"Little Nightmares",g:"Terror",r:4.7,d:"Escapa de un barco lleno de criaturas aterradoras como Six. Plataformas de terror con atmósfera única e inquietante.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_LittleNightmaresCompleteEdition_image500w.jpg",col:"#1a1a0a"},
+{t:"Little Nightmares II",g:"Terror",r:4.8,d:"Mono y Six huyen juntos de un mundo distorsionado por señales de televisión. Más oscuro y perturbador que el original.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_LittleNightmaresII_image500w.jpg",col:"#1a1a0a"},
+{t:"Little Nightmares III",g:"Terror",r:4.5,d:"Dos niños atrapados en el Nowhere deben cooperar para sobrevivir. Primera entrega con cooperativo online.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/littlenightmaresiii_1/1x1_LittleNightmaresIII_image500w.jpg",col:"#1a1a0a"},
+{t:"Lovers in a Dangerous Spacetime",g:"Acción",r:4.4,d:"Pilota una nave espacial cooperativa contra las fuerzas del Anti-Amor. Acción frenética y colorida para dos jugadores.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_LoversInADangerousSpacetime_image500w.jpg",col:"#e63946"},
+{t:"Luigi's Mansion 3",g:"Aventura",r:4.8,d:"Luigi atrapa fantasmas en un hotel embrujado para rescatar a Mario. El mejor juego de la saga con niveles creativos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_LuigisMansion3_image500w.jpg",col:"#52b788"},
+{t:"Maneater",g:"Acción",r:4.1,d:"Juega como un tiburón bull y devora humanos para crecer y evolucionar. RPG de acción único y caótico.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_Maneater_image500w.jpg",col:"#023e8a"},
+{t:"Mario Kart 8 Deluxe",g:"Carreras",r:5.0,d:"El juego de carreras más completo de Mario. 96 pistas, multijugador para 8 y diversión garantizada para todos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_MarioKart8Deluxe_image500w.jpg",col:"#e63946"},
+{t:"Mario Tennis Aces",g:"Deportes",r:4.2,d:"Tenis arcade con personajes del universo Mario. Movimientos especiales, torneos y multijugador en línea.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_MarioTennisAces_image500w.jpg",col:"#e9822c"},
+{t:"Mario vs. Donkey Kong",g:"Plataformas",r:4.3,d:"Mario y DK se enfrentan en puzles de plataformas. Guía a los Mini-Mario a la salida en niveles ingeniosos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_MarioVsDonkeyKong_image500w.jpg",col:"#e63946"},
+{t:"Marvel Ultimate Alliance 3: The Black Order",g:"Acción",r:4.3,d:"Forma un equipo con tus héroes Marvel favoritos y detén a Thanos. Acción cooperativa para hasta 4 jugadores.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_MarvelUltimateAlliance3TheBlackOrder_image500w.jpg",col:"#c1121f"},
+{t:"Metro: Last Light Redux",g:"Shooter",r:4.5,d:"Sobrevive en los túneles del metro de Moscú postapocalíptico. Shooter en primera persona tenso y atmosférico.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_MetroLastLightRedux_enGB_image500w.jpg",col:"#2d4a3e"},
+{t:"Metroid Dread",g:"Acción",r:4.9,d:"Samus escapa de un planeta infestado por los robots E.M.M.I. El mejor Metroid 2D en décadas. Imprescindible.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_MetroidDread_image500w.jpg",col:"#023e8a"},
+{t:"Metroid Prime 4: Beyond",g:"Acción",r:4.8,d:"Samus regresa en primera persona a explorar planetas alienígenas en la secuela más esperada de Switch.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_2_games/metroid_prime_4_nintendo_switch_2_edition/1x1_NSwitch_MetroidPrime4Beyond_image500w.jpg",col:"#1a2a4a"},
+{t:"Metroid Prime Remastered",g:"Acción",r:4.9,d:"El clásico de GameCube completamente remasterizado. Explora Tallon IV en primera persona con gráficos modernos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_MetroidPrimeRemastered_image500w.jpg",col:"#2d4a6a"},
+{t:"Minecraft",g:"Simulación",r:4.8,d:"Construye, explora y sobrevive en un mundo infinito de bloques. El juego más vendido de la historia.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_MinecraftNintendoSwitchEdition_image500w.jpg",col:"#5c8a3c"},
+{t:"Minecraft Dungeons",g:"RPG",r:4.3,d:"Dungeon crawler cooperativo en el universo de Minecraft. Combate simple, botín variado y mucha diversión.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_MinecraftDungeons_image500w.jpg",col:"#5c8a3c"},
+{t:"Minecraft: Story Mode - Complete Adventure",g:"Aventura",r:4.0,d:"Una aventura narrativa episódica en el mundo de Minecraft. Decisiones, humor y personajes memorables.",c:"img/minecraft-story.png",col:"#5c8a3c"},
+{t:"MIO: Memories in Orbit",g:"Aventura",r:4.0,d:"Aventura espacial emotiva sobre recuerdos y pérdida. Exploración tranquila con una historia que toca el corazón.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/miomemoriesinorbit/1x1_MIOMemoriesInOrbit_image500w.jpg",col:"#1a2a5c"},
+{t:"MLB The Show 25",g:"Deportes",r:4.3,d:"El simulador de béisbol más completo. Modos carrera, franquicia y partidas online con las estrellas de la MLB.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/mlbtheshow25/1x1_MLBTheShow25_image500w.jpg",col:"#023e8a"},
+{t:"Monster Hunter Rise",g:"RPG",r:4.8,d:"Caza monstruos colosales con el Palamute y el Wirebug en este espectacular Monster Hunter diseñado para Switch.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_MonsterHunterRise_image500w.jpg",col:"#8b7355"},
+{t:"Mortal Kombat 11",g:"Pelea",r:4.6,d:"El juego de lucha más violento y espectacular. Fatalities brutales, historia cinematográfica y roster enorme.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_MortalKombat11_image500w.jpg",col:"#1a1a1a"},
+{t:"Mortal Shell",g:"RPG",r:4.3,d:"RPG de acción soulslike donde habitas cuerpos abandonados. Combate preciso y mundo oscuro lleno de misterio.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_MortalShellCompleteEdition_image500w.jpg",col:"#1a1a1a"},
+{t:"Moving Out",g:"Simulación",r:4.4,d:"Mudanza caótica y cooperativa. Lanza muebles por las ventanas con tus amigos en niveles absurdos y divertidos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_MovingOut_image500w.jpg",col:"#e9822c"},
+{t:"Moving Out 2",g:"Simulación",r:4.3,d:"Más caos, más muebles y más dimensiones. La secuela añade portales y nuevas mecánicas al desastre cooperativo.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_MovingOut2_image500w.jpg",col:"#e9c46a"},
+{t:"My Friend Pedro: Blood Bullets Bananas",g:"Acción",r:4.5,d:"Dispara, voltea y destruye enemigos al ritmo de la música guiado por un plátano parlante. Acción estilizada y adictiva.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_MyFriendPedro_image500w.jpg",col:"#e9822c"},
+{t:"NBA 2K21",g:"Deportes",r:3.8,d:"Simulador de baloncesto con modos carrera, Mi Equipo y partidas online. Gráficos y jugabilidad realistas.",c:"img/nba2k21.png",col:"#c1121f"},
+{t:"NBA 2K26",g:"Deportes",r:4.0,d:"La entrega más reciente del baloncesto de 2K con plantillas actualizadas y nuevas mecánicas de juego.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/nba2k26/1x1_NBA2K26_image500w.jpg",col:"#023e8a"},
+{t:"Need for Speed: Hot Pursuit Remastered",g:"Carreras",r:4.5,d:"Compite como piloto o policía en persecuciones a alta velocidad. El clásico de Criterion remasterizado y sin frenos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_NeedForSpeedHotPursuitRemastered_image500w.jpg",col:"#e63946"},
+{t:"Never Grave: The Witch and the Curse",g:"Acción",r:4.2,d:"Roguelike de acción donde posees a tus enemigos para luchar. Mecánicas únicas en un mundo de fantasía oscura.",c:"img/never-grave.png",col:"#4a1942"},
+{t:"New Super Mario Bros. U Deluxe",g:"Plataformas",r:4.6,d:"Mario clásico en 2D con cuatro personajes jugables. Perfecto para jugar en familia con hasta cuatro jugadores.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_NewSuperMarioBrosUDeluxe_image500w.jpg",col:"#e63946"},
+{t:"NieR: Automata",g:"RPG",r:4.9,d:"Androides contra máquinas en un mundo postapocalíptico. Historia filosófica profunda y combate frenético impecable.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_NierAutomataTheEndOfYorhaEdition_image500w.jpg",col:"#1a1a1a"},
+{t:"Nine Sols",g:"Acción",r:4.7,d:"Metroidvania de acción con parry preciso y estética taopunk. Historia profunda inspirada en mitología asiática.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/ninesols/1x1_NineSols_image500w.jpg",col:"#c1121f"},
+{t:"Nintendo Switch Sports",g:"Deportes",r:4.1,d:"Fútbol, tenis, bolos y más deportes con los Joy-Con. El sucesor espiritual de Wii Sports para toda la familia.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_NintendoSwitchSports_2024_image500w.jpg",col:"#3d8bcd"},
+{t:"No Man's Sky",g:"Aventura",r:4.4,d:"Explora galaxias infinitas, construye bases y sobrevive en planetas alienígenas. Un universo procedural sin límites.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_NoMansSky_image500w.jpg",col:"#1a2a5c"},
+{t:"Ori",g:"Plataformas",r:4.8,d:"Ori y el Bosque de los Espíritus en una aventura visual impresionante. Plataformas fluido con historia emotiva.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_OriAndTheWillOfTheWisps_image500w.jpg",col:"#1a3a5c"},
+{t:"Overcooked! 2",g:"Simulación",r:4.5,d:"Cocina y sirve platos en cocinas imposibles con tus amigos. El caos cooperativo más divertido de Switch.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_Overcooked2_image500w.jpg",col:"#e9822c"},
+{t:"Paper Mario: The Thousand-Year Door",g:"RPG",r:4.9,d:"El mejor Paper Mario remasterizado. Humor, historia y combates por turnos únicos en un mundo de papel encantador.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/wii_25/SQ_Wii_SuperPaperMario_image500w.jpg",col:"#e63946"},
+{t:"Pico Park",g:"Multijugador",r:4.3,d:"Puzles cooperativos para hasta 8 jugadores. Simple de aprender, imposible sin coordinación. Ideal para grupos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_PicoPark_image500w.jpg",col:"#3d8bcd"},
+{t:"Pico Park 2",g:"Multijugador",r:4.2,d:"Más niveles, más caos y más cooperación. La secuela añade nuevos puzles aún más ingeniosos para jugar en grupo.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_PicoPark2_image500w.jpg",col:"#52b788"},
+{t:"Pikmin 3 Deluxe",g:"Estrategia",r:4.7,d:"Comanda un ejército de Pikmin para explorar un planeta alienígena y recolectar recursos. Estrategia adorable y profunda.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_Pikmin3Deluxe_image500w.jpg",col:"#52b788"},
+{t:"Pikmin 4",g:"Estrategia",r:4.8,d:"La entrega más accesible y completa de la saga. Nuevos Pikmin, modo nocturno y el adorable Oatchi como compañero.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_Pikmin4_image500w.jpg",col:"#2d6a4f"},
+{t:"Pillars of Eternity: Complete Edition",g:"RPG",r:4.5,d:"RPG de rol clásico por turnos con una historia profunda. Crea tu personaje y toma decisiones que cambian el mundo.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_PillarsOfEternityCompleteEdition_image500w.jpg",col:"#1a2a4a"},
+{t:"Planet of Lana II",g:"Aventura",r:4.3,d:"Aventura cinematográfica de plataformas en un planeta alienígena. Arte precioso y narrativa visual sin palabras.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/planetoflanaii/1x1_PlanetOfLanaII_image500w.jpg",col:"#2d4a6a"},
+{t:"Pokémon Escarlata",g:"RPG",r:4.1,d:"Explora la región de Paldea en mundo abierto. Captura, entrena y combate en la entrega más ambiciosa de Pokémon.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_PokemonScarletViolet_Scarlet_esES_image500w.jpg",col:"#e9822c"},
+{t:"Pokémon FireRed",g:"RPG",r:4.7,d:"El clásico Pokémon Rojo remasterizado. Comienza en Pueblo Paleta y conviértete en el mejor entrenador de Kanto.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/pokemonfireredleafgreen/1x1_NSwitch_PokemonFireRed_ES_image500w.jpg",col:"#c1121f"},
+{t:"Pokémon LeafGreen",g:"RPG",r:4.7,d:"El clásico Pokémon Verde remasterizado. Misma aventura de Kanto con Pokémon exclusivos y nuevas áreas desbloqueables.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/pokemonfireredleafgreen/1x1_NSwitch_PokemonLeafGreen_ES_image500w.jpg",col:"#2d6a2d"},
+{t:"Pokémon Legends: Arceus",g:"RPG",r:4.5,d:"Viaja al pasado de Sinnoh y captura Pokémon en tiempo real. El juego que reinventó la fórmula de la saga.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_PokemonLegendsArceus_ES_image500w.jpg",col:"#2d4a6a"},
+{t:"Pokémon Legends: Z-A",g:"RPG",r:4.4,d:"La próxima entrega de Legends se desarrolla en Lumios City. Acción en tiempo real en la mítica ciudad de Kalos.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/pokemonlegendsza/1x1_NSwitch2_PokemonLegendsZA_KV_ES_es_image500w.jpg",col:"#1a1a2e"},
+{t:"Pokémon Shield",g:"RPG",r:4.2,d:"Explora la región de Galar y desafía el Gimnasio más famoso. Raids en guaridas y Pokémon Dynamax te esperan.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_PokemonShield_esES_image500w.jpg",col:"#1a2a7a"},
+{t:"Poker Night at the Inventory",g:"Puzzle",r:3.8,d:"Juega al póker con personajes icónicos de videojuegos en partidas llenas de humor y referencias a la cultura gamer.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/pokernightattheinventory/1x1_PokerNightAtTheInventory_image500w.jpg",col:"#1a5c1a"},
+{t:"Poppy Playtime: Chapter 3",g:"Terror",r:4.2,d:"Regresa a la fábrica de Playtime Co. y enfrenta a Catnap. Más terror, más puzles y más secretos perturbadores.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/poppyplaytimechapter3/1x1_PoppyPlaytimeChapter3_image500w.jpg",col:"#4a1a5c"},
+{t:"Poppy Playtime: Chapter 4",g:"Terror",r:4.3,d:"El capítulo más oscuro de la saga. Nuevas amenazas y revelaciones que cambian todo lo que sabías de la fábrica.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/poppyplaytimechapter4/1x1_PoppyPlaytimeChapter4_image500w.jpg",col:"#1a4a5c"},
+{t:"Rayman: 30th Anniversary Edition",g:"Plataformas",r:4.6,d:"Celebra 30 años de Rayman con una colección que incluye sus mejores aventuras remasterizadas en un solo paquete.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/rayman30thanniversaryedition/1x1_Rayman30ThAnniversaryEdition_image500w.jpg",col:"#e9c46a"},
+{t:"Rayman Legends: Definitive Edition",g:"Plataformas",r:4.8,d:"Uno de los mejores plataformas 2D jamás creados. Niveles musicales épicos, cooperativo y arte visual impecable.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/wii_u_20/SQ_WiiU_RaymanLegends_image500w.jpg",col:"#e9c46a"},
+{t:"RAILGRADE",g:"Estrategia",r:4.2,d:"Construye y gestiona redes ferroviarias para industrializar planetas. Estrategia de logística adictiva y bien diseñada.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_Railgrade_image500w.jpg",col:"#2a2a3e"},
+{t:"Railway Empire",g:"Estrategia",r:4.3,d:"Construye el imperio ferroviario más grande del siglo XIX. Gestiona rutas, trenes y ciudades en todo el continente.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_RailwayEmpireNintendoSwitchEdition_image500w.jpg",col:"#5c4033"},
+{t:"Railway Empire 2",g:"Estrategia",r:4.4,d:"Expande tu red ferroviaria por Europa y América. Más mapas, más trenes y más desafíos logísticos que el original.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_RailwayEmpire2NintendoSwitchEdition_image500w.jpg",col:"#7c6a50"},
+{t:"Resident Evil 4",g:"Terror",r:4.9,d:"Leon rescata a la hija del presidente en un pueblo europeo infestado. El remake definitivo de un clásico absoluto.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_ResidentEvil4_image500w.jpg",col:"#2d4a3e"},
+{t:"Resident Evil 5",g:"Terror",r:4.5,d:"Chris y Sheva investigan un brote en África. Acción cooperativa intensa en uno de los RE más vendidos de la saga.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_ResidentEvil5_image500w.jpg",col:"#8b7355"},
+{t:"Resident Evil 6",g:"Terror",r:4.2,d:"Cuatro campañas entrelazadas con Leon, Chris, Jake y Ada. El RE más ambicioso y cinematográfico de la saga.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_ResidentEvil6_image500w.jpg",col:"#1a1a1a"},
+ {t:"Saints Row: The Third - The Full Package",g:"Acción",r:4.4,d:"Domina Steelport con tu banda en este sandbox caótico y desenfrenado. Acción sin censura y humor irreverente.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_SaintsRowTheThirdTheFullPackage_image500w.jpg",col:"#4a1a5c"},
+{t:"Salt and Sanctuary",g:"RPG",r:4.5,d:"Soulslike en 2D con atmósfera oscura y combate preciso. Explora una isla maldita llena de secretos y jefes brutales.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_SaltAndSanctuary_image500w.jpg",col:"#1a1a1a"},
+{t:"Sea of Stars",g:"RPG",r:4.9,d:"RPG por turnos de ensueño inspirado en los clásicos del género. Historia emotiva, combates dinámicos y arte visual sublime.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_SeaOfStars_image500w.jpg",col:"#1a3a5c"},
+{t:"Snipperclips: Cut It Out Together",g:"Puzzle",r:4.4,d:"Recorta a tu compañero para resolver puzles imposibles. Cooperativo creativo y divertidísimo para jugar en pareja.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_Snipperclips_esES_image500w.jpg",col:"#e9822c"},
+{t:"Sonic Frontiers",g:"Plataformas",r:4.3,d:"Sonic en mundo abierto por primera vez. Velocidad, combate y exploración en las islas Starfall con una historia profunda.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_SonicFrontiers_image500w.jpg",col:"#023e8a"},
+{t:"Sonic Superstars",g:"Plataformas",r:4.2,d:"Sonic regresa al plataformas 2D clásico con hasta 4 jugadores. Nuevos poderes esmeralda y niveles llenos de velocidad.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_SonicSuperstars_image500w.jpg",col:"#3d8bcd"},
+{t:"Splatoon 3",g:"Shooter",r:4.5,d:"La guerra de tintas más caótica y colorida regresa. Nuevas armas, modos y una campaña épica en Splatsville.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_nswitch_splatoon3_old/1x1_NSwitch_Splatoon3_image500w.jpg",col:"#f4a261"},
+{t:"Super Mario 3D All-Stars",g:"Plataformas",r:4.7,d:"Tres clásicos en uno: Super Mario 64, Sunshine y Galaxy remasterizados. La historia en 3D de Mario en un solo cartucho.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_SuperMario3DAllstars_image500w.jpg",col:"#e63946"},
+{t:"Super Mario 3D World + Bowser's Fury",g:"Plataformas",r:4.8,d:"Mario cooperativo en 3D más Bowser's Fury, una aventura en mundo abierto frenética y visualmente espectacular.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_SuperMario3DWorldAndBowsersFury_image500w.jpg",col:"#52b788"},
+{t:"Super Mario Bros. Wonder",g:"Plataformas",r:4.9,d:"El Mario 2D más creativo jamás hecho. Las flores Wonder transforman cada nivel en algo completamente inesperado.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_SuperMarioBrosWonder_image500w.jpg",col:"#e63946"},
+{t:"Super Mario Maker 2",g:"Plataformas",r:4.7,d:"Crea tus propios niveles de Mario y compártelos con el mundo. Herramientas creativas ilimitadas y millones de niveles online.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_SuperMarioMaker2_image500w.jpg",col:"#e9822c"},
+{t:"Super Mario Odyssey",g:"Plataformas",r:5.0,d:"Mario y Cappy viajan por mundos increíbles para rescatar a Peach. El plataformas 3D más libre y creativo de Nintendo.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_SuperMarioOdyssey_Alt01_image500w.jpg",col:"#e9822c"},
+{t:"Super Mario Party",g:"Multijugador",r:4.2,d:"El party game de Mario de vuelta con tableros clásicos, minijuegos y el modo cooperativo Toad's Rec Room.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_SuperMarioParty_image500w.jpg",col:"#e63946"},
+{t:"Super Mario Party Jamboree",g:"Multijugador",r:4.5,d:"El Mario Party más grande hasta la fecha. Más tableros, más minijuegos y el nuevo modo online para hasta 20 jugadores.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_SuperMarioPartyJamboree_BASE_image500w.jpg",col:"#e63946"},
+{t:"Super Smash Bros. Ultimate",g:"Pelea",r:5.0,d:"Todos los personajes de la historia de Smash reunidos. El juego de lucha más completo y épico jamás creado.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_SuperSmashBrosUltimate_02_image500w.jpg",col:"#e63946"},
+{t:"Tails of Iron",g:"Acción",r:4.5,d:"Una rata guerrera recupera su reino de las ranas en este RPG de acción soulslike con arte oscuro y brutal.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_TailsOfIron_image500w.jpg",col:"#5c4033"},
+{t:"Tails of Iron 2: Whiskers of Winter",g:"Acción",r:4.6,d:"La rata guerrera regresa en una aventura más oscura y fría. Nuevas armas, enemigos y un mundo invernal despiadado.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/tailsofironandtailsofiron2deluxebundle/1x1_TailsOfIronAndTailsOfIron2DeluxeBundle_image500w.jpg",col:"#1a2a4a"},
+{t:"TMNT: Splintered Fate",g:"Acción",r:4.4,d:"Las Tortugas Ninja en un roguelike cooperativo frenético. Rescata al Maestro Splinter en mazmorras llenas de enemigos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/1x1_NSwitchDS_TeenageMutantNinjaTurtlesSplinteredFate_new_image500w.jpg",col:"#2d6a4f"},
+{t:"The Elder Scrolls V: Skyrim",g:"RPG",r:4.8,d:"El RPG de mundo abierto más icónico. Mata dragones, explora mazmorras y forja tu propio destino en Tamriel.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_TheElderScrollsVSkyrim_image500w.jpg",col:"#2d4a6a"},
+{t:"The Legend of Heroes: Trails Beyond the Horizon",g:"RPG",r:4.5,d:"JRPG épico con una historia profunda y personajes memorables. Combate estratégico por turnos en un mundo vivo y detallado.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/thelegendofheroestrailsbeyondthehorizon_1/1x1_TheLegendOfHeroesTrailsBeyondTheHorizon_image500w.jpg",col:"#1a2a5c"},
+{t:"The Legend of Zelda: Breath of the Wild",g:"Aventura",r:5.0,d:"Link despierta en un Hyrule devastado y libre. Escala montañas, resuelve shrines y derrota a Calamity Ganon.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/wii_u_20/SQ_WiiU_TheLegendOfZeldaBreathOfTheWild_image500w.jpg",col:"#2d6a4f"},
+{t:"The Legend of Zelda: Echoes of Wisdom",g:"Aventura",r:4.7,d:"Zelda es la protagonista por primera vez. Crea ecos de objetos y enemigos para resolver puzles y explorar Hyrule.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_TheLegendofZeldaEchoesOfWisdom_image500w.jpg",col:"#52b788"},
+{t:"The Legend of Zelda: Tears of the Kingdom",g:"Aventura",r:5.0,d:"Hyrule se expande hacia los cielos. Construye máquinas, fusiona armas y descubre los misterios de las ruinas antiguas.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/1x1_NSwitch_TloZTearsOfTheKingdom_BASE_image500w.jpg",col:"#3a7d44"},
+{t:"The Witcher 3: Wild Hunt - Complete Edition",g:"RPG",r:5.0,d:"Geralt de Rivia busca a Ciri en el mejor RPG de mundo abierto jamás creado. Historia, combate y mundo vivo insuperables.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_download_software/SQ_NSwitchDS_TheWitcher3WildHunt_enGB_image500w.jpg",col:"#2d4a3e"},
+{t:"Tomb Raider: Definitive Edition",g:"Aventura",r:4.5,d:"El origen de Lara Croft. Sobrevive en una isla peligrosa, descubre sus secretos y conviértete en la Tomb Raider.",c:"https://www.nintendo.com/eu/media/images/assets/nintendo_switch_games/tombraiderdefinitiveedition/1x1_TombRaiderDefinitiveEdition_image500w.jpg",col:"#2d4a3e"},
+{t:"Tropico 6",g:"Estrategia",r:4.3,d:"Gobierna tu propia isla caribeña como El Presidente. Sátira política, economía y decisiones que marcan el destino de tu nación.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_Tropico6NintendoSwitchEdition_image500w.jpg",col:"#e9c46a"},
+{t:"Yoshi's Crafted World",g:"Plataformas",r:4.5,d:"Yoshi explora mundos hechos de cartón, tela y objetos cotidianos. Plataformas adorable y creativo para toda la familia.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_YoshisCraftedWorld_image500w.jpg",col:"#52b788"},
+];
+
+// Genres
+const GENRES=["Todos",...new Set(G.map(x=>x.g)).values()].sort((a,b)=>a==="Todos"?-1:a.localeCompare(b));
+  const btnNew=document.createElement("button");
+btnNew.className="gb gb-new";
+btnNew.textContent="🆕 Recién agregados";
+btnNew.onclick=()=>{aG='__new__';document.querySelectorAll(".gb").forEach(x=>x.classList.remove("on"));btnNew.classList.add("on");render()};
+document.getElementById("gbar").prepend(btnNew);
+const bar=document.getElementById("gbar");
+GENRES.forEach(g=>{
+  const b=document.createElement("button");
+  b.className="gb"+(g==="Todos"?" on":"");
+  b.textContent=g;
+  b.onclick=()=>{aG=g;document.querySelectorAll(".gb").forEach(x=>x.classList.remove("on"));b.classList.add("on");render()};
+  bar.appendChild(b);
+});
+
+function stars(n){const f=Math.floor(n),h=n%1>=.5;return"★".repeat(f)+(h?"½":"")+"☆".repeat(5-f-(h?1:0))}
+
+function filtered(){
+  const q=document.getElementById("si").value.toLowerCase().trim();
+  const s=document.getElementById("ss").value;
+  let list=[...G];
+ if(aG==='__new__')list=G.slice(-10);
+else if(aG!=="Todos")list=list.filter(x=>x.g===aG);
+  if(q){const words=q.split(' ').filter(w=>w.length>0);list=list.filter(x=>words.every(w=>x.t.toLowerCase().includes(w)||x.g.toLowerCase().includes(w)));};
+  if(s==="az")list.sort((a,b)=>a.t.localeCompare(b.t));
+  else if(s==="rating")list.sort((a,b)=>b.r-a.r);
+  else if(s==="genre")list.sort((a,b)=>a.g.localeCompare(b.g)||a.t.localeCompare(b.t));
+  return list;
+}
+
+function pedir(game,e){
+  e.stopPropagation();
+  const msg=`Hola, me interesa el juego: *${game.t}* (${PX})`;
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank");
+}
+
+function compartir(game,e){
+  e.stopPropagation();
+  const msg=`🎮 *${game.t}*\n🎯 ${game.g} · ⭐${game.r}/5\n💰 ${PX}\n\n📲 Pedidos: wa.me/${WA}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,"_blank");
+}
+
+function shareAll(){
+  const list=filtered();
+  const hdr=`🎮 *TS Game Store – Nintendo Switch*\n💰 Precio: ${PX} c/u\n\n`;
+  const body=list.map((g,i)=>`${i+1}. ${g.t}`).join("\n");
+  const footer=`\n\n📲 Pedidos: wa.me/${WA}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(hdr+body+footer)}`,"_blank");
+}
+
+function render(){
+  const list=filtered();
+  document.getElementById("cl").textContent=`${list.length} juego${list.length!==1?"s":""}`;
+  const grid=document.getElementById("grid");
+  grid.innerHTML="";
+  if(!list.length){
+    grid.innerHTML=`<div class="empty"><p>🕹️</p><p>No se encontraron juegos</p></div>`;
+    return;
+  }
+  list.forEach(game=>{
+    const card=document.createElement("div");
+    card.className="card";
+    const gid=`ov_${game.t.replace(/\W/g,"")}`;
+    card.innerHTML=`
+      <div class="cimg" style="background:${game.col}">
+        ${game.c?`<img src="${game.c}" alt="${game.t}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>`:""}
+        <div class="fall" style="${!game.c?"display:flex":""}background:${game.col}">
+          <img src="logo.png" alt="TS" onerror="this.outerHTML='<span style=font-size:38px>🎮</span>'"/>
+          <p>${game.t}</p>
+        </div>
+        <div class="bg">${game.g}</div>
+        <div class="bp">${PX}</div>
+        <div class="ov" id="${gid}">
+          <div class="ovt">${game.t}</div>
+          <div class="ovd">⭐ ${game.r}/5 · ${game.g}</div>
+          <div class="ovs">${stars(game.r)}</div>
+          <div style="font-size:10px;color:#ccc;margin-top:4px;line-height:1.5">${game.d||''}</div>
+        </div>
+      </div>
+      <div class="cfoot">
+        <div class="ctit">${game.t}</div>
+        <div class="cbtns">
+          <button class="bped" onclick="pedir(${JSON.stringify(game).replace(/"/g,'&quot;')},event)">🛒 Pedir</button>
+          <button class="bcom" onclick="compartir(${JSON.stringify(game).replace(/"/g,'&quot;')},event)">📤 Compartir</button>
+        </div>
+      </div>`;
+    card.querySelector(".cimg").onclick=()=>{
+      const ov=document.getElementById(gid);
+      const on=ov.classList.contains("on");
+      if(aCard&&aCard!==ov)aCard.classList.remove("on");
+      ov.classList.toggle("on",!on);
+      aCard=on?null:ov;
+    };
+    grid.appendChild(card);
+  });
+}
+
+render();
+</script>
+</body>
+</html>

@@ -57,6 +57,9 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
   .swrap{max-width:100%}
   .hrow{max-width:100%}
 }
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,185,230,.6)}70%{box-shadow:0 0 0 10px rgba(0,185,230,0)}}
+.gb-new{animation:pulse 2s infinite;border-color:#0AB9E6 !important;color:#0AB9E6 !important}
+.gb-new.on{background:#0AB9E6 !important;color:#fff !important;animation:none}
 </style>
 </head>
 <body>
@@ -243,6 +246,11 @@ const G=[
 
 // Genres
 const GENRES=["Todos",...new Set(G.map(x=>x.g)).values()].sort((a,b)=>a==="Todos"?-1:a.localeCompare(b));
+  const btnNew=document.createElement("button");
+btnNew.className="gb gb-new";
+btnNew.textContent="🆕 Recién agregados";
+btnNew.onclick=()=>{aG='__new__';document.querySelectorAll(".gb").forEach(x=>x.classList.remove("on"));btnNew.classList.add("on");render()};
+document.getElementById("gbar").prepend(btnNew);
 const bar=document.getElementById("gbar");
 GENRES.forEach(g=>{
   const b=document.createElement("button");
@@ -258,7 +266,8 @@ function filtered(){
   const q=document.getElementById("si").value.toLowerCase().trim();
   const s=document.getElementById("ss").value;
   let list=[...G];
-  if(aG!=="Todos")list=list.filter(x=>x.g===aG);
+ if(aG==='__new__')list=G.slice(-10);
+else if(aG!=="Todos")list=list.filter(x=>x.g===aG);
   if(q){const words=q.split(' ').filter(w=>w.length>0);list=list.filter(x=>words.every(w=>x.t.toLowerCase().includes(w)||x.g.toLowerCase().includes(w)));};
   if(s==="az")list.sort((a,b)=>a.t.localeCompare(b.t));
   else if(s==="rating")list.sort((a,b)=>b.r-a.r);

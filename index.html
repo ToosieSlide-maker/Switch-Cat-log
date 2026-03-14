@@ -2,198 +2,320 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Switch Catálogo 🎮</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>TS Game Store</title>
 <style>
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:#0a0a14;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
-  /* HEADER */
-  header{background:linear-gradient(135deg,#E60012,#9b0000);padding:18px 16px 14px;position:sticky;top:0;z-index:99;box-shadow:0 4px 20px rgba(230,0,18,.5)}
-  .h-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;max-width:700px;margin-left:auto;margin-right:auto}
-  .logo{display:flex;align-items:center;gap:10px}
-  .logo-text{font-weight:900;font-size:20px}
-  .logo-sub{font-size:11px;opacity:.8}
-  .btn-wa-all{background:#25D366;border:none;border-radius:12px;padding:8px 14px;color:#fff;font-weight:800;cursor:pointer;font-size:12px}
-  .search-wrap{max-width:700px;margin:0 auto}
-  #searchInput{width:100%;padding:12px 16px;border-radius:12px;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:14px;outline:none}
-  #searchInput::placeholder{color:rgba(255,255,255,.6)}
-  /* BODY */
-  .body{max-width:700px;margin:0 auto;padding:16px 12px}
-  /* GENRES */
-  .genres{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
-  .genres::-webkit-scrollbar{display:none}
-  .genre-btn{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:#1a1a2e;color:#fff;font-weight:600;cursor:pointer;font-size:12px;transition:background .2s}
-  .genre-btn.active{background:#E60012;border-color:#E60012}
-  /* TOOLBAR */
-  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-  .count{font-size:13px;color:#888}
-  #sortSel{background:#1a1a2e;color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:6px 10px;font-size:12px;outline:none}
-  .hint{text-align:center;font-size:11px;color:#444;margin-bottom:12px}
-  /* GRID */
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
-  /* CARD */
-  .card{border-radius:16px;overflow:hidden;cursor:pointer;background:#1a1a2e;box-shadow:0 6px 24px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.07);transition:transform .2s}
-  .card:hover{transform:translateY(-4px)}
-  .card-img{position:relative;padding-top:133%;overflow:hidden}
-  .card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .3s}
-  .card-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;text-align:center}
-  .card-fallback span{font-size:38px}
-  .card-fallback p{font-size:11px;font-weight:700;margin-top:6px;line-height:1.3}
-  .badge-genre{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
-  .badge-price{position:absolute;top:8px;right:8px;background:#E60012;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800}
-  .overlay{position:absolute;inset:0;background:rgba(0,0,0,.88);display:flex;flex-direction:column;justify-content:center;padding:14px;gap:5px;opacity:0;transition:opacity .25s;pointer-events:none}
-  .overlay.show{opacity:1}
-  .ov-title{font-size:13px;font-weight:800;line-height:1.3}
-  .ov-dev{font-size:11px;color:#aaa}
-  .ov-desc{font-size:11px;color:#ddd;line-height:1.5}
-  .ov-play{font-size:11px;color:#aaa}
-  .card-footer{padding:10px 10px 8px}
-  .card-title{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:6px}
-  .card-bottom{display:flex;justify-content:space-between;align-items:center}
-  .stars{color:#FFD700;font-size:13px}
-  .btn-wa{background:#25D366;border:none;border-radius:8px;padding:5px 10px;color:#fff;font-size:11px;font-weight:700;cursor:pointer}
-  /* EMPTY */
-  .empty{text-align:center;padding:60px 20px;color:#444}
-  .empty p{font-size:16px;margin-top:12px}
-  .empty small{font-size:13px;margin-top:4px;display:block}
-  /* FOOTER */
-  footer{text-align:center;padding:20px;color:#2a2a3a;font-size:11px}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0a14;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+header{background:linear-gradient(135deg,#E60012,#8b0000);padding:14px 14px 12px;position:sticky;top:0;z-index:99;box-shadow:0 4px 24px rgba(230,0,18,.55)}
+.hrow{display:flex;align-items:center;justify-content:space-between;max-width:720px;margin:0 auto 11px}
+.hlogo{display:flex;align-items:center;gap:10px}
+.hlogo img{height:42px;width:42px;border-radius:10px;object-fit:contain;background:#000;padding:2px}
+.htxt h1{font-size:18px;font-weight:900;line-height:1.1}
+.htxt small{font-size:11px;opacity:.8}
+.btnall{background:#25D366;border:none;border-radius:10px;padding:8px 13px;color:#fff;font-weight:800;cursor:pointer;font-size:12px;white-space:nowrap}
+.swrap{max-width:720px;margin:0 auto}
+#si{width:100%;padding:11px 16px;border-radius:12px;border:none;background:rgba(255,255,255,.16);color:#fff;font-size:14px;outline:none}
+#si::placeholder{color:rgba(255,255,255,.55)}
+.body{max-width:720px;margin:0 auto;padding:13px 11px}
+.gbar{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:11px;scrollbar-width:none}
+.gbar::-webkit-scrollbar{display:none}
+.gb{flex-shrink:0;padding:6px 13px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:#1a1a2e;color:#fff;font-weight:600;cursor:pointer;font-size:11px;transition:background .15s}
+.gb.on{background:#E60012;border-color:#E60012}
+.tbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
+.cnt{font-size:12px;color:#555}
+#ss{background:#1a1a2e;color:#fff;border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:5px 9px;font-size:12px;outline:none}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(142px,1fr));gap:10px}
+.card{border-radius:14px;overflow:hidden;cursor:pointer;background:#1a1a2e;box-shadow:0 4px 18px rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.07);transition:transform .18s}
+.card:hover{transform:translateY(-3px)}
+.cimg{position:relative;padding-top:140%;overflow:hidden}
+.cimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.fall{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;padding:10px;text-align:center}
+.fall img{width:55%;opacity:.65}
+.fall p{font-size:10px;color:#bbb;margin-top:7px;font-weight:700;line-height:1.3}
+.bg{position:absolute;top:7px;left:7px;background:rgba(0,0,0,.78);backdrop-filter:blur(4px);padding:3px 8px;border-radius:18px;font-size:9px;font-weight:700}
+.bp{position:absolute;top:7px;right:7px;background:#E60012;padding:3px 8px;border-radius:18px;font-size:10px;font-weight:900}
+.ov{position:absolute;inset:0;background:rgba(0,0,0,.91);padding:11px;display:flex;flex-direction:column;justify-content:center;gap:5px;opacity:0;transition:opacity .22s;pointer-events:none}
+.ov.on{opacity:1}
+.ovt{font-size:12px;font-weight:800;line-height:1.3}
+.ovd{font-size:10px;color:#aaa}
+.ovs{color:#FFD700;font-size:12px}
+.cfoot{padding:8px 8px 0}
+.ctit{font-size:11px;font-weight:700;line-height:1.3;margin-bottom:6px;min-height:28px}
+.cbtns{display:flex;gap:5px;padding-bottom:8px}
+.bped{flex:1;background:#E60012;border:none;border-radius:7px;padding:7px 3px;color:#fff;font-size:10px;font-weight:900;cursor:pointer}
+.bcom{flex:1;background:#25D366;border:none;border-radius:7px;padding:7px 3px;color:#fff;font-size:10px;font-weight:900;cursor:pointer}
+.empty{grid-column:1/-1;text-align:center;padding:50px 20px;color:#444}
+.empty p{font-size:15px;margin-top:10px}
+footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8px}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="h-top">
-    <div class="logo">
-      <span style="font-size:28px">🎮</span>
-      <div>
-        <div class="logo-text">Switch Catálogo</div>
-        <div class="logo-sub" id="totalCount">12 juegos disponibles</div>
+  <div class="hrow">
+    <div class="hlogo">
+      <img src="logo.png" alt="TS" onerror="this.style.display='none'"/>
+      <div class="htxt">
+        <h1>TS Game Store</h1>
+        <small id="hc">142 juegos · Nintendo Switch</small>
       </div>
     </div>
-    <button class="btn-wa-all" onclick="shareAll()">📤 Compartir lista</button>
+    <button class="btnall" onclick="shareAll()">📤 Lista</button>
   </div>
-  <div class="search-wrap">
-    <input id="searchInput" type="text" placeholder="🔍  Buscar juego, género, desarrollador..." oninput="render()"/>
+  <div class="swrap">
+    <input id="si" type="text" placeholder="🔍  Buscar juego..." oninput="render()"/>
   </div>
 </header>
 
 <div class="body">
-  <div class="genres" id="genreBar"></div>
-  <div class="toolbar">
-    <span class="count" id="countLabel"></span>
-    <select id="sortSel" onchange="render()">
-      <option value="rating">⭐ Mejor rating</option>
-      <option value="year">📅 Más reciente</option>
-      <option value="price">💰 Menor precio</option>
+  <div class="gbar" id="gbar"></div>
+  <div class="tbar">
+    <span class="cnt" id="cl"></span>
+    <select id="ss" onchange="render()">
+      <option value="az">🔤 A – Z</option>
+      <option value="rating">⭐ Rating</option>
+      <option value="genre">🎯 Género</option>
     </select>
   </div>
-  <p class="hint">Toca una portada para ver más info</p>
   <div class="grid" id="grid"></div>
-  <footer>Switch Catálogo · Todos los derechos de los juegos pertenecen a sus respectivos dueños</footer>
+  <footer>TS Game Store · Precio único: 350 CUP</footer>
 </div>
 
 <script>
-const GAMES=[
-  {id:1,title:"The Legend of Zelda: Tears of the Kingdom",genre:"Aventura",players:"1",rating:5.0,year:2023,developer:"Nintendo",price:"60 USD",cover:"https://upload.wikimedia.org/wikipedia/en/5/5c/The_Legend_of_Zelda_Tears_of_the_Kingdom.jpg",description:"Explora Hyrule y los cielos en la secuela épica de Breath of the Wild.",color:"#3a7d44"},
-  {id:2,title:"Mario Kart 8 Deluxe",genre:"Carreras",players:"1-8",rating:5.0,year:2017,developer:"Nintendo",price:"45 USD",cover:"https://upload.wikimedia.org/wikipedia/en/5/56/Mario_Kart_8_Deluxe.jpg",description:"El juego de carreras más completo de Mario con 96 pistas y multijugador.",color:"#e63946"},
-  {id:3,title:"Super Mario Odyssey",genre:"Plataformas",players:"1-2",rating:5.0,year:2017,developer:"Nintendo",price:"45 USD",cover:"https://upload.wikimedia.org/wikipedia/en/8/8d/Super_Mario_Odyssey.jpg",description:"Mario viaja por mundos increíbles con su sombrero mágico Cappy.",color:"#f4a261"},
-  {id:4,title:"Hollow Knight",genre:"Acción",players:"1",rating:5.0,year:2018,developer:"Team Cherry",price:"15 USD",cover:"https://upload.wikimedia.org/wikipedia/en/7/70/Hollow_Knight_cover.jpg",description:"Explora un vasto reino subterráneo de insectos en este metroidvania oscuro.",color:"#1d3557"},
-  {id:5,title:"Animal Crossing: New Horizons",genre:"Simulación",players:"1-8",rating:5.0,year:2020,developer:"Nintendo",price:"50 USD",cover:"https://upload.wikimedia.org/wikipedia/en/b/b7/Animal_Crossing_New_Horizons.jpg",description:"Construye la isla de tus sueños y vive al ritmo de la naturaleza.",color:"#52b788"},
-  {id:6,title:"Pokémon Scarlet",genre:"RPG",players:"1-4",rating:4.0,year:2022,developer:"Game Freak",price:"55 USD",cover:"https://upload.wikimedia.org/wikipedia/en/b/bc/Pok%C3%A9mon_Scarlet_boxart.jpg",description:"Explora Paldea en mundo abierto y conviértete en campeón Pokémon.",color:"#e9c46a"},
-  {id:7,title:"Metroid Dread",genre:"Acción",players:"1",rating:4.8,year:2021,developer:"MercurySteam",price:"50 USD",cover:"https://upload.wikimedia.org/wikipedia/en/4/4e/Metroid_Dread_cover.jpg",description:"Samus enfrenta a los robots E.M.M.I. en un planeta peligroso y desconocido.",color:"#023e8a"},
-  {id:8,title:"Stardew Valley",genre:"Simulación",players:"1-4",rating:5.0,year:2017,developer:"ConcernedApe",price:"15 USD",cover:"https://upload.wikimedia.org/wikipedia/en/f/fd/Logo_of_Stardew_Valley.png",description:"Hereda una granja y construye una nueva vida tranquila en el campo.",color:"#588157"},
-  {id:9,title:"Super Smash Bros. Ultimate",genre:"Pelea",players:"1-8",rating:5.0,year:2018,developer:"Nintendo",price:"55 USD",cover:"https://upload.wikimedia.org/wikipedia/en/9/9e/Super_Smash_Bros_Ultimate_cover_art.jpg",description:"Todos los personajes. Todos los estadios. El Smash definitivo.",color:"#e63946"},
-  {id:10,title:"Splatoon 3",genre:"Shooter",players:"1-8",rating:4.5,year:2022,developer:"Nintendo",price:"55 USD",cover:"https://upload.wikimedia.org/wikipedia/en/1/1c/Splatoon_3_cover_art.jpg",description:"Batalla de tintas online con nuevas armas y modos de juego frescos.",color:"#f4a261"},
-  {id:11,title:"Celeste",genre:"Plataformas",players:"1",rating:5.0,year:2018,developer:"Maddy Makes Games",price:"20 USD",cover:"https://upload.wikimedia.org/wikipedia/en/b/bb/Celeste_box_art_full.png",description:"Escala una montaña mientras superas tus propios miedos internos.",color:"#7b2d8b"},
-  {id:12,title:"Fire Emblem: Three Houses",genre:"RPG",players:"1",rating:4.8,year:2019,developer:"Intelligent Systems",price:"50 USD",cover:"https://upload.wikimedia.org/wikipedia/en/e/e6/Fire_Emblem_Three_Houses_box_art.jpg",description:"Lidera una de tres facciones en un mundo de estrategia táctica y drama.",color:"#d62828"},
+const WA='5355207586', PX='350 CUP';
+let aG='Todos', aCard=null;
+
+const G=[
+ {t:"Animal Crossing: New Horizons",g:"Simulación",r:4.9,c:"https://upload.wikimedia.org/wikipedia/en/b/b7/Animal_Crossing_New_Horizons.jpg",col:"#52b788"},
+ {t:"Ashen",g:"RPG",r:4.2,c:"",col:"#7c6a50"},
+ {t:"Astral Chain",g:"Acción",r:4.7,c:"https://upload.wikimedia.org/wikipedia/en/8/8c/Astral_Chain_cover_art.jpg",col:"#1a1a3e"},
+ {t:"Back to the Dawn",g:"Estrategia",r:4.3,c:"",col:"#2d4a3e"},
+ {t:"Baldur's Gate: Dark Alliance",g:"RPG",r:4.0,c:"",col:"#1c2a4a"},
+ {t:"Baldur's Gate: Dark Alliance 2",g:"RPG",r:4.1,c:"",col:"#1c3060"},
+ {t:"Baroque Syndrome",g:"RPG",r:3.8,c:"",col:"#2a1a30"},
+ {t:"Bayonetta 3",g:"Acción",r:4.7,c:"https://upload.wikimedia.org/wikipedia/en/6/66/Bayonetta_3_cover_art.jpg",col:"#c9184a"},
+ {t:"Blasphemous 2",g:"Acción",r:4.6,c:"https://upload.wikimedia.org/wikipedia/en/d/d3/Blasphemous_2_cover_art.jpg",col:"#6b0f1a"},
+ {t:"Borderlands 3",g:"Shooter",r:4.5,c:"https://upload.wikimedia.org/wikipedia/en/8/8e/Borderlands_3_cover_art.jpg",col:"#e9c46a"},
+ {t:"Bratz: Flaunt Your Fashion",g:"Simulación",r:3.0,c:"",col:"#e040fb"},
+ {t:"Brotato",g:"Acción",r:4.5,c:"",col:"#8b4513"},
+ {t:"Burnout Paradise Remastered",g:"Carreras",r:4.4,c:"",col:"#c1121f"},
+ {t:"Call of Juarez: Gunslinger",g:"Shooter",r:4.3,c:"",col:"#7c6a50"},
+ {t:"Cars 3: Driven to Win",g:"Carreras",r:3.5,c:"",col:"#e63946"},
+ {t:"Chained Echoes",g:"RPG",r:4.8,c:"",col:"#1a3a5c"},
+ {t:"Chickenhare and the Treasure of Spiking-beard",g:"Aventura",r:3.8,c:"",col:"#5c4033"},
+ {t:"Cities: Skylines",g:"Simulación",r:4.3,c:"",col:"#3d8bcd"},
+ {t:"Civilization VI",g:"Estrategia",r:4.5,c:"https://upload.wikimedia.org/wikipedia/en/7/79/Civilization_VI_cover_art.jpg",col:"#2d6a4f"},
+ {t:"Civilization VII",g:"Estrategia",r:4.4,c:"",col:"#1b4332"},
+ {t:"Crash Bandicoot 4: It's About Time",g:"Plataformas",r:4.6,c:"https://upload.wikimedia.org/wikipedia/en/6/6c/Crash_Bandicoot_4_It%27s_About_Time.jpg",col:"#e9822c"},
+ {t:"Crysis 3 Remastered",g:"Shooter",r:4.1,c:"",col:"#2d6a4f"},
+ {t:"Cult of the Lamb",g:"Acción",r:4.7,c:"https://upload.wikimedia.org/wikipedia/en/0/08/Cult_of_the_Lamb_cover.jpg",col:"#4a1942"},
+ {t:"Cuphead",g:"Plataformas",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/7/7c/Cuphead_cover_art.jpg",col:"#d62828"},
+ {t:"Dark Souls Remastered",g:"RPG",r:4.9,c:"https://upload.wikimedia.org/wikipedia/en/8/8d/Dark_Souls_Remastered_Cover_Art.jpg",col:"#1a1a1a"},
+ {t:"DC Super Hero Girls: Teen Power",g:"Aventura",r:3.5,c:"",col:"#1a1aff"},
+ {t:"Death's Door",g:"Acción",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/5/fifty/Deaths_Door_cover_art.jpg",col:"#1a1a2e"},
+ {t:"Demon Slayer: The Hinokami Chronicles 2",g:"Pelea",r:4.5,c:"",col:"#c1121f"},
+ {t:"Diablo III: Eternal Collection",g:"RPG",r:4.6,c:"https://upload.wikimedia.org/wikipedia/en/e/e4/Diablo_III_cover.png",col:"#6b0f1a"},
+ {t:"Dispatch",g:"Acción",r:3.8,c:"",col:"#2a2a3e"},
+ {t:"Don't Starve Together",g:"Supervivencia",r:4.5,c:"",col:"#1a1a0a"},
+ {t:"Donkey Kong Country: Tropical Freeze",g:"Plataformas",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/9/9e/Donkey_Kong_Country_Tropical_Freeze_Switch.jpg",col:"#e9822c"},
+ {t:"Dragon Ball: Sparking Zero",g:"Pelea",r:4.6,c:"",col:"#e9c46a"},
+ {t:"Dragon Quest VII: Reimagined",g:"RPG",r:4.5,c:"",col:"#1a3a7a"},
+ {t:"Dragon Quest XI S: Echoes of an Elusive Age",g:"RPG",r:4.9,c:"https://upload.wikimedia.org/wikipedia/en/1/1b/Dragon_Quest_XI_S_cover_art.jpg",col:"#1a3a7a"},
+ {t:"EA Sports FC 23",g:"Deportes",r:4.0,c:"",col:"#023e8a"},
+ {t:"EA Sports FC 26",g:"Deportes",r:4.2,c:"",col:"#023e8a"},
+ {t:"Final Fantasy VI",g:"RPG",r:4.8,c:"",col:"#1a1a5c"},
+ {t:"Fire Emblem Engage",g:"Estrategia",r:4.6,c:"https://upload.wikimedia.org/wikipedia/en/f/f5/Fire_Emblem_Engage_cover_art.jpg",col:"#c1121f"},
+ {t:"Grand Theft Auto: San Andreas - Definitive Edition",g:"Acción",r:3.8,c:"",col:"#2d6a4f"},
+ {t:"GRID Autosport",g:"Carreras",r:4.4,c:"",col:"#e63946"},
+ {t:"Hades",g:"Acción",r:5.0,c:"https://upload.wikimedia.org/wikipedia/en/c/c4/Hades_cover_art.jpg",col:"#6b0f1a"},
+ {t:"Hades 2",g:"Acción",r:4.8,c:"",col:"#4a1942"},
+ {t:"Heave Ho",g:"Multijugador",r:4.0,c:"",col:"#e9c46a"},
+ {t:"Hellblade: Senua's Sacrifice",g:"Acción",r:4.7,c:"https://upload.wikimedia.org/wikipedia/en/0/0e/Hellblade_Senua%27s_Sacrifice_cover_art.jpg",col:"#1a1a1a"},
+ {t:"Hitman Absolution",g:"Acción",r:4.2,c:"",col:"#c1121f"},
+ {t:"Hogwarts Legacy",g:"RPG",r:4.7,c:"https://upload.wikimedia.org/wikipedia/en/4/4f/Hogwarts_Legacy.jpg",col:"#2d6a4f"},
+ {t:"Hollow Knight",g:"Acción",r:5.0,c:"https://upload.wikimedia.org/wikipedia/en/7/70/Hollow_Knight_cover.jpg",col:"#1d3557"},
+ {t:"Hollow Knight: Silksong",g:"Acción",r:4.8,c:"",col:"#2d4a3e"},
+ {t:"Hot Wheels Unleashed",g:"Carreras",r:4.3,c:"",col:"#e9822c"},
+ {t:"Hunt the Night",g:"Acción",r:4.2,c:"",col:"#1a1a2e"},
+ {t:"Immortals Fenyx Rising",g:"Aventura",r:4.4,c:"https://upload.wikimedia.org/wikipedia/en/6/sixty/Immortals_Fenyx_Rising_cover_art.jpg",col:"#2d6a9f"},
+ {t:"It Takes Two",g:"Aventura",r:5.0,c:"https://upload.wikimedia.org/wikipedia/en/8/8b/It_Takes_Two_cover_art.jpg",col:"#e9822c"},
+ {t:"Jujutsu Kaisen: Cursed Clash",g:"Pelea",r:4.0,c:"",col:"#1a1a1a"},
+ {t:"Kingdom Come: Deliverance - Royal Edition",g:"RPG",r:4.6,c:"",col:"#5c4033"},
+ {t:"Kirby and the Forgotten Land",g:"Plataformas",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/b/b4/Kirby_and_the_Forgotten_Land_cover_art.jpg",col:"#ff85a1"},
+ {t:"Kirby's Return to Dream Land Deluxe",g:"Plataformas",r:4.6,c:"https://upload.wikimedia.org/wikipedia/en/c/c3/Kirby%27s_Return_to_Dream_Land_Deluxe_Cover.jpg",col:"#ff69b4"},
+ {t:"LEGO Horizon Adventures",g:"Aventura",r:4.2,c:"",col:"#e9c46a"},
+ {t:"LEGO Marvel Super Heroes 2",g:"Aventura",r:4.3,c:"",col:"#e63946"},
+ {t:"Little Nightmares",g:"Terror",r:4.7,c:"https://upload.wikimedia.org/wikipedia/en/6/68/Little_Nightmares_cover_art.jpg",col:"#1a1a0a"},
+ {t:"Little Nightmares II",g:"Terror",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/3/3e/Little_Nightmares_II.jpg",col:"#1a1a0a"},
+ {t:"Little Nightmares III",g:"Terror",r:4.5,c:"",col:"#1a1a0a"},
+ {t:"Lovers in a Dangerous Spacetime",g:"Acción",r:4.4,c:"",col:"#e63946"},
+ {t:"Luigi's Mansion 3",g:"Aventura",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/b/b9/Luigi%27s_Mansion_3_cover_art.jpg",col:"#52b788"},
+ {t:"Maneater",g:"Acción",r:4.1,c:"",col:"#023e8a"},
+ {t:"Mario Kart 8 Deluxe",g:"Carreras",r:5.0,c:"https://upload.wikimedia.org/wikipedia/en/5/56/Mario_Kart_8_Deluxe.jpg",col:"#e63946"},
+ {t:"Mario Tennis Aces",g:"Deportes",r:4.2,c:"https://upload.wikimedia.org/wikipedia/en/e/ef/Mario_Tennis_Aces.jpg",col:"#e9822c"},
+ {t:"Mario vs. Donkey Kong",g:"Plataformas",r:4.3,c:"",col:"#e63946"},
+ {t:"Marvel Ultimate Alliance 3: The Black Order",g:"Acción",r:4.3,c:"https://upload.wikimedia.org/wikipedia/en/d/d4/Marvel_Ultimate_Alliance_3_cover_art.jpg",col:"#c1121f"},
+ {t:"Metro: Last Light Redux",g:"Shooter",r:4.5,c:"",col:"#2d4a3e"},
+ {t:"Metroid Dread",g:"Acción",r:4.9,c:"https://upload.wikimedia.org/wikipedia/en/4/4e/Metroid_Dread_cover.jpg",col:"#023e8a"},
+ {t:"Metroid Prime 4: Beyond",g:"Acción",r:4.8,c:"",col:"#1a2a4a"},
+ {t:"Metroid Prime Remastered",g:"Acción",r:4.9,c:"https://upload.wikimedia.org/wikipedia/en/f/f6/Metroid_Prime_Remastered_cover_art.jpg",col:"#2d4a6a"},
+ {t:"Minecraft",g:"Simulación",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/5/57/Minecraft_cover.PNG",col:"#5c8a3c"},
+ {t:"Minecraft Dungeons",g:"RPG",r:4.3,c:"https://upload.wikimedia.org/wikipedia/en/b/b2/Minecraft_Dungeons_cover_art.jpg",col:"#5c8a3c"},
+ {t:"Minecraft: Story Mode - Complete Adventure",g:"Aventura",r:4.0,c:"",col:"#5c8a3c"},
+ {t:"MIO: Memories in Orbit",g:"Aventura",r:4.0,c:"",col:"#1a2a5c"},
+ {t:"MLB The Show 25",g:"Deportes",r:4.3,c:"",col:"#023e8a"},
+ {t:"Monster Hunter Rise",g:"RPG",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/1/1b/Monster_Hunter_Rise_cover_art.jpg",col:"#8b7355"},
+ {t:"Mortal Kombat 11",g:"Pelea",r:4.6,c:"https://upload.wikimedia.org/wikipedia/en/3/3e/Mortal_Kombat_11.jpg",col:"#1a1a1a"},
+ {t:"Mortal Shell",g:"RPG",r:4.3,c:"",col:"#1a1a1a"},
+ {t:"Moving Out",g:"Simulación",r:4.4,c:"",col:"#e9822c"},
+ {t:"Moving Out 2",g:"Simulación",r:4.3,c:"",col:"#e9c46a"},
+ {t:"My Friend Pedro: Blood Bullets Bananas",g:"Acción",r:4.5,c:"",col:"#e9822c"},
+ {t:"NBA 2K21",g:"Deportes",r:3.8,c:"",col:"#c1121f"},
+ {t:"NBA 2K26",g:"Deportes",r:4.0,c:"",col:"#023e8a"},
+ {t:"Need for Speed: Hot Pursuit Remastered",g:"Carreras",r:4.5,c:"https://upload.wikimedia.org/wikipedia/en/9/9b/Need_for_Speed_Hot_Pursuit_Remastered.jpg",col:"#e63946"},
+ {t:"Never Grave: The Witch and the Curse",g:"Acción",r:4.2,c:"",col:"#4a1942"},
+ {t:"New Super Mario Bros. U Deluxe",g:"Plataformas",r:4.6,c:"https://upload.wikimedia.org/wikipedia/en/f/f9/New_Super_Mario_Bros._U_Deluxe.jpg",col:"#e63946"},
+ {t:"NieR: Automata",g:"RPG",r:4.9,c:"https://upload.wikimedia.org/wikipedia/en/8/8a/NieR-Automata_cover_art.png",col:"#1a1a1a"},
+ {t:"Nine Sols",g:"Acción",r:4.7,c:"",col:"#c1121f"},
+ {t:"Nintendo Switch Sports",g:"Deportes",r:4.1,c:"https://upload.wikimedia.org/wikipedia/en/5/5b/Nintendo_Switch_Sports_cover.jpg",col:"#3d8bcd"},
+ {t:"No Man's Sky",g:"Aventura",r:4.4,c:"",col:"#1a2a5c"},
+ {t:"Ori",g:"Plataformas",r:4.8,c:"",col:"#1a3a5c"},
+ {t:"Overcooked! 2",g:"Simulación",r:4.5,c:"",col:"#e9822c"},
+ {t:"Paper Mario: The Thousand-Year Door",g:"RPG",r:4.9,c:"https://upload.wikimedia.org/wikipedia/en/2/2e/Paper_Mario_The_Thousand-Year_Door_Switch_cover.jpg",col:"#e63946"},
+ {t:"Pico Park",g:"Multijugador",r:4.3,c:"",col:"#3d8bcd"},
+ {t:"Pico Park 2",g:"Multijugador",r:4.2,c:"",col:"#52b788"},
+ {t:"Pikmin 3 Deluxe",g:"Estrategia",r:4.7,c:"https://upload.wikimedia.org/wikipedia/en/5/5f/Pikmin_3_Deluxe_cover_art.jpg",col:"#52b788"},
+ {t:"Pikmin 4",g:"Estrategia",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/c/c7/Pikmin_4_cover_art.jpg",col:"#2d6a4f"},
+ {t:"Pillars of Eternity: Complete Edition",g:"RPG",r:4.5,c:"",col:"#1a2a4a"},
+ {t:"Planet of Lana II",g:"Aventura",r:4.3,c:"",col:"#2d4a6a"},
+ {t:"Pokémon Escarlata",g:"RPG",r:4.1,c:"https://upload.wikimedia.org/wikipedia/en/b/bc/Pok%C3%A9mon_Scarlet_boxart.jpg",col:"#e9822c"},
+ {t:"Pokémon FireRed & LeafGreen",g:"RPG",r:4.7,c:"",col:"#c1121f"},
+ {t:"Pokémon Legends: Arceus",g:"RPG",r:4.5,c:"https://upload.wikimedia.org/wikipedia/en/8/8d/Pok%C3%A9mon_Legends_Arceus_cover.jpg",col:"#2d4a6a"},
+ {t:"Pokémon Legends: Z-A",g:"RPG",r:4.4,c:"",col:"#1a1a2e"},
+ {t:"Pokémon Shield",g:"RPG",r:4.2,c:"https://upload.wikimedia.org/wikipedia/en/5/5b/Pok%C3%A9mon_Shield_cover.jpg",col:"#1a2a7a"},
+ {t:"Poker Night at the Inventory",g:"Puzzle",r:3.8,c:"",col:"#1a5c1a"},
+ {t:"Poppy Playtime: Chapter 3",g:"Terror",r:4.2,c:"",col:"#4a1a5c"},
+ {t:"Poppy Playtime: Chapter 4",g:"Terror",r:4.3,c:"",col:"#1a4a5c"},
+ {t:"Rayman: 30th Anniversary Edition",g:"Plataformas",r:4.6,c:"",col:"#e9c46a"},
+ {t:"Rayman Legends: Definitive Edition",g:"Plataformas",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/d/d6/Rayman_Legends_cover.jpg",col:"#e9c46a"},
+ {t:"Resident Evil 4",g:"Terror",r:4.9,c:"https://upload.wikimedia.org/wikipedia/en/8/83/Resident_Evil_4_remake_cover_art.jpg",col:"#2d4a3e"},
+ {t:"Resident Evil 5",g:"Terror",r:4.5,c:"https://upload.wikimedia.org/wikipedia/en/3/33/Resident_Evil_5_cover_art.jpg",col:"#8b7355"},
+ {t:"Resident Evil 6",g:"Terror",r:4.2,c:"https://upload.wikimedia.org/wikipedia/en/e/e3/Resident_Evil_6_cover_art.jpg",col:"#1a1a1a"},
+ {t:"Saints Row: The Third - The Full Package",g:"Acción",r:4.4,c:"",col:"#4a1a5c"},
+ {t:"Salt and Sanctuary",g:"RPG",r:4.5,c:"",col:"#1a1a1a"},
+ {t:"Sea of Stars",g:"RPG",r:4.9,c:"https://upload.wikimedia.org/wikipedia/en/a/a6/Sea_of_Stars_cover_art.jpg",col:"#1a3a5c"},
+ {t:"Snipperclips: Cut It Out Together",g:"Puzzle",r:4.4,c:"",col:"#e9822c"},
+ {t:"Sonic Frontiers",g:"Plataformas",r:4.3,c:"https://upload.wikimedia.org/wikipedia/en/0/0e/Sonic_Frontiers_cover_art.jpg",col:"#023e8a"},
+ {t:"Sonic Superstars",g:"Plataformas",r:4.2,c:"https://upload.wikimedia.org/wikipedia/en/2/29/Sonic_Superstars_cover_art.jpg",col:"#3d8bcd"},
+ {t:"Splatoon 3",g:"Shooter",r:4.5,c:"https://upload.wikimedia.org/wikipedia/en/1/1c/Splatoon_3_cover_art.jpg",col:"#f4a261"},
+ {t:"Super Mario 3D All-Stars",g:"Plataformas",r:4.7,c:"https://upload.wikimedia.org/wikipedia/en/a/aa/Super_Mario_3D_All-Stars.jpg",col:"#e63946"},
+ {t:"Super Mario 3D World + Bowser's Fury",g:"Plataformas",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/4/4f/Super_Mario_3D_World_%2B_Bowser%27s_Fury_cover_art.jpg",col:"#52b788"},
+ {t:"Super Mario Bros. Wonder",g:"Plataformas",r:4.9,c:"https://upload.wikimedia.org/wikipedia/en/7/7e/Super_Mario_Bros._Wonder_cover_art.jpg",col:"#e63946"},
+ {t:"Super Mario Maker 2",g:"Plataformas",r:4.7,c:"https://upload.wikimedia.org/wikipedia/en/9/93/Super_Mario_Maker_2_box_art.jpg",col:"#e9822c"},
+ {t:"Super Mario Odyssey",g:"Plataformas",r:5.0,c:"https://upload.wikimedia.org/wikipedia/en/8/8d/Super_Mario_Odyssey.jpg",col:"#e9822c"},
+ {t:"Super Mario Party",g:"Multijugador",r:4.2,c:"https://upload.wikimedia.org/wikipedia/en/1/1d/Super_Mario_Party_game_cover.jpg",col:"#e63946"},
+ {t:"Super Mario Party Jamboree",g:"Multijugador",r:4.5,c:"https://upload.wikimedia.org/wikipedia/en/8/8d/Super_Mario_Party_Jamboree_cover_art.jpg",col:"#e63946"},
+ {t:"Super Smash Bros. Ultimate",g:"Pelea",r:5.0,c:"https://upload.wikimedia.org/wikipedia/en/9/9e/Super_Smash_Bros_Ultimate_cover_art.jpg",col:"#e63946"},
+ {t:"Tails of Iron",g:"Acción",r:4.5,c:"",col:"#5c4033"},
+ {t:"Tails of Iron 2: Whiskers of Winter",g:"Acción",r:4.6,c:"",col:"#1a2a4a"},
+ {t:"TMNT: Splintered Fate",g:"Acción",r:4.4,c:"",col:"#2d6a4f"},
+ {t:"The Elder Scrolls V: Skyrim",g:"RPG",r:4.8,c:"https://upload.wikimedia.org/wikipedia/en/1/15/The_Elder_Scrolls_V_Skyrim_cover.png",col:"#2d4a6a"},
+ {t:"The Legend of Heroes: Trails Beyond the Horizon",g:"RPG",r:4.5,c:"",col:"#1a2a5c"},
+ {t:"The Legend of Zelda: Breath of the Wild",g:"Aventura",r:5.0,c:"https://upload.wikimedia.org/wikipedia/en/c/c6/The_Legend_of_Zelda_Breath_of_the_Wild.jpg",col:"#2d6a4f"},
+ {t:"The Legend of Zelda: Echoes of Wisdom",g:"Aventura",r:4.7,c:"https://upload.wikimedia.org/wikipedia/en/6/6c/The_Legend_of_Zelda_Echoes_of_Wisdom_cover_art.jpg",col:"#52b788"},
+ {t:"The Legend of Zelda: Tears of the Kingdom",g:"Aventura",r:5.0,c:"https://upload.wikimedia.org/wikipedia/en/5/5c/The_Legend_of_Zelda_Tears_of_the_Kingdom.jpg",col:"#3a7d44"},
+ {t:"The Witcher 3: Wild Hunt - Complete Edition",g:"RPG",r:5.0,c:"https://upload.wikimedia.org/wikipedia/en/0/0c/Witcher_3_cover_art.jpg",col:"#2d4a3e"},
+ {t:"Tomb Raider: Definitive Edition",g:"Aventura",r:4.5,c:"https://upload.wikimedia.org/wikipedia/en/0/0b/Tomb_Raider_2013.jpg",col:"#2d4a3e"},
+ {t:"Tropico 6",g:"Estrategia",r:4.3,c:"",col:"#e9c46a"},
+ {t:"Yoshi's Crafted World",g:"Plataformas",r:4.5,c:"https://upload.wikimedia.org/wikipedia/en/7/7d/Yoshi%27s_Crafted_World.jpg",col:"#52b788"},
 ];
 
-const GENRES=["Todos",...new Set(GAMES.map(g=>g.genre))];
-let activeGenre="Todos";
-let activeCard=null;
-
-// Género bar
-const bar=document.getElementById("genreBar");
+// Genres
+const GENRES=["Todos",...new Set(G.map(x=>x.g)).values()].sort((a,b)=>a==="Todos"?-1:a.localeCompare(b));
+const bar=document.getElementById("gbar");
 GENRES.forEach(g=>{
   const b=document.createElement("button");
-  b.className="genre-btn"+(g==="Todos"?" active":"");
+  b.className="gb"+(g==="Todos"?" on":"");
   b.textContent=g;
-  b.onclick=()=>{activeGenre=g;document.querySelectorAll(".genre-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()};
+  b.onclick=()=>{aG=g;document.querySelectorAll(".gb").forEach(x=>x.classList.remove("on"));b.classList.add("on");render()};
   bar.appendChild(b);
 });
 
-function stars(n){
-  const f=Math.floor(n),h=n%1>=.5;
-  return "★".repeat(f)+(h?"½":"")+"☆".repeat(5-f-(h?1:0));
+function stars(n){const f=Math.floor(n),h=n%1>=.5;return"★".repeat(f)+(h?"½":"")+"☆".repeat(5-f-(h?1:0))}
+
+function filtered(){
+  const q=document.getElementById("si").value.toLowerCase().trim();
+  const s=document.getElementById("ss").value;
+  let list=[...G];
+  if(aG!=="Todos")list=list.filter(x=>x.g===aG);
+  if(q)list=list.filter(x=>x.t.toLowerCase().includes(q)||x.g.toLowerCase().includes(q));
+  if(s==="az")list.sort((a,b)=>a.t.localeCompare(b.t));
+  else if(s==="rating")list.sort((a,b)=>b.r-a.r);
+  else if(s==="genre")list.sort((a,b)=>a.g.localeCompare(b.g)||a.t.localeCompare(b.t));
+  return list;
 }
 
-function shareGame(game){
-  const msg=`🎮 *${game.title}*\n👾 ${game.developer} · ${game.year}\n🎯 ${game.genre} · 👥 ${game.players} jugador${game.players!=="1"?"es":""}\n⭐ ${game.rating}/5\n💰 ${game.price}\n\n${game.description}`;
-  window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank");
+function pedir(game,e){
+  e.stopPropagation();
+  const msg=`Hola, me interesa el juego: *${game.t}* (${PX})`;
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,"_blank");
+}
+
+function compartir(game,e){
+  e.stopPropagation();
+  const msg=`🎮 *${game.t}*\n🎯 ${game.g} · ⭐${game.r}/5\n💰 ${PX}\n\n📲 Pedidos: wa.me/${WA}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,"_blank");
 }
 
 function shareAll(){
   const list=filtered();
-  const header=`🎮 *Catálogo Nintendo Switch* (${list.length} juegos)\n\n`;
-  const body=list.map((g,i)=>`${i+1}. *${g.title}* — ${g.genre} · ${g.price} · ⭐${g.rating}`).join("\n");
-  window.open("https://wa.me/?text="+encodeURIComponent(header+body),"_blank");
-}
-
-function filtered(){
-  const q=document.getElementById("searchInput").value.toLowerCase().trim();
-  const s=document.getElementById("sortSel").value;
-  let list=[...GAMES];
-  if(activeGenre!=="Todos") list=list.filter(g=>g.genre===activeGenre);
-  if(q) list=list.filter(g=>g.title.toLowerCase().includes(q)||g.developer.toLowerCase().includes(q)||g.genre.toLowerCase().includes(q));
-  if(s==="rating") list.sort((a,b)=>b.rating-a.rating);
-  if(s==="year") list.sort((a,b)=>b.year-a.year);
-  if(s==="price") list.sort((a,b)=>parseFloat(a.price)-parseFloat(b.price));
-  return list;
+  const hdr=`🎮 *TS Game Store – Nintendo Switch*\n💰 Precio: ${PX} c/u\n\n`;
+  const body=list.map((g,i)=>`${i+1}. ${g.t}`).join("\n");
+  const footer=`\n\n📲 Pedidos: wa.me/${WA}`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(hdr+body+footer)}`,"_blank");
 }
 
 function render(){
   const list=filtered();
-  document.getElementById("countLabel").textContent=list.length+" resultado"+(list.length!==1?"s":"");
+  document.getElementById("cl").textContent=`${list.length} juego${list.length!==1?"s":""}`;
   const grid=document.getElementById("grid");
   grid.innerHTML="";
-
-  if(list.length===0){
-    grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><span style="font-size:48px">🕹️</span><p>No se encontraron juegos</p><small>Intenta con otro término</small></div>`;
+  if(!list.length){
+    grid.innerHTML=`<div class="empty"><p>🕹️</p><p>No se encontraron juegos</p></div>`;
     return;
   }
-
   list.forEach(game=>{
     const card=document.createElement("div");
     card.className="card";
+    const gid=`ov_${game.t.replace(/\W/g,"")}`;
     card.innerHTML=`
-      <div class="card-img" style="background:${game.color}">
-        <img src="${game.cover}" alt="${game.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-        <div class="card-fallback" style="display:none;background:${game.color}"><span>🎮</span><p>${game.title}</p></div>
-        <div class="badge-genre">${game.genre}</div>
-        <div class="badge-price">${game.price}</div>
-        <div class="overlay" id="ov${game.id}">
-          <div class="ov-title">${game.title}</div>
-          <div class="ov-dev">${game.developer} · ${game.year}</div>
-          <div class="ov-desc">${game.description}</div>
-          <div class="ov-play">👥 ${game.players} jugador${game.players!=="1"?"es":""}</div>
-          <div class="stars">${stars(game.rating)}</div>
+      <div class="cimg" style="background:${game.col}">
+        ${game.c?`<img src="${game.c}" alt="${game.t}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>`:""}
+        <div class="fall" style="${!game.c?"display:flex":""}background:${game.col}">
+          <img src="logo.png" alt="TS" onerror="this.outerHTML='<span style=font-size:38px>🎮</span>'"/>
+          <p>${game.t}</p>
+        </div>
+        <div class="bg">${game.g}</div>
+        <div class="bp">${PX}</div>
+        <div class="ov" id="${gid}">
+          <div class="ovt">${game.t}</div>
+          <div class="ovd">⭐ ${game.r}/5 · ${game.g}</div>
+          <div class="ovs">${stars(game.r)}</div>
         </div>
       </div>
-      <div class="card-footer">
-        <div class="card-title">${game.title}</div>
-        <div class="card-bottom">
-          <span class="stars">${stars(game.rating)}</span>
-          <button class="btn-wa" onclick="event.stopPropagation();shareGame(${JSON.stringify(game).replace(/"/g,'&quot;')})">📤 WA</button>
+      <div class="cfoot">
+        <div class="ctit">${game.t}</div>
+        <div class="cbtns">
+          <button class="bped" onclick="pedir(${JSON.stringify(game).replace(/"/g,'&quot;')},event)">🛒 Pedir</button>
+          <button class="bcom" onclick="compartir(${JSON.stringify(game).replace(/"/g,'&quot;')},event)">📤 Compartir</button>
         </div>
-      </div>
-    `;
-    card.onclick=()=>{
-      const ov=document.getElementById("ov"+game.id);
-      const showing=ov.classList.contains("show");
-      if(activeCard&&activeCard!==ov) activeCard.classList.remove("show");
-      ov.classList.toggle("show",!showing);
-      activeCard=showing?null:ov;
+      </div>`;
+    card.querySelector(".cimg").onclick=()=>{
+      const ov=document.getElementById(gid);
+      const on=ov.classList.contains("on");
+      if(aCard&&aCard!==ov)aCard.classList.remove("on");
+      ov.classList.toggle("on",!on);
+      aCard=on?null:ov;
     };
     grid.appendChild(card);
   });

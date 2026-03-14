@@ -126,7 +126,7 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
 <script>
 const WA='5355207586', PX='350 CUP';
 let aG='Todos', aCard=null, curTab='juegos';
-const SHEET_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vT2RBJAM2CAxW-PfOZCBMMWPtc3mCq429w3CY-FXtI9ZAqTbswzLKe7-hlribvwH75pyZUbHZ5YDZ88/pub?gid=0&single=true&output=csv';
+const SHEET_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vT2RBJAM2CAxW-PfOZCBMMWPtc3mCq429w3CY-FXtI9ZAqTbswzLKe7-hlribvwH75pyZUbHZ5YDZ88/pub?gid=0&single=true&output=tsv';
 
 function setTab(t){
   curTab=t;
@@ -160,7 +160,7 @@ function loadConsolas(){
       cl.style.display='none';
       const rows=csv.trim().split('\n').slice(1);
       rows.forEach(row=>{
-        const cols=row.split(',');
+        const cols=row.split('  ');
         const n=cols[0]||'';
         const p=cols[1]||'';
         const disp=(cols[2]||'').trim().toUpperCase();

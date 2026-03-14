@@ -278,7 +278,9 @@ function loadConsolas(){
         const d=document.createElement('div');
         d.className='con-card';
         d.innerHTML=`
-          ${img?`<img class="con-img" src="${img}" onerror="this.style.di${img?`<img class="con-img" src="${img.split('|')[0]}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${n}" onclick="verConsola('${n}','${img}','${desc}','${p}')" style="cursor:pointer"/><div class="con-img-fall" style="display:none" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`:`<div class="con-img-fall" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`}
+          ${img?`<img class="con-img" src="${img.split('|')[0]}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${n}" onclick="verConsola('${n}','${img}','${desc}','${p}')" style="cursor:pointer"/><div class="con-img-fall" style="display:none" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`:`<div class="con-img-fall" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`}
+          <div class="con-info">
+            <div class="con-name">${n}</div>
             <div class="${disp==='SI'?'con-stock-si':'con-stock-no'}">${disp==='SI'?'✅ Disponible':'❌ Agotado'}</div>
             <div class="con-desc">${desc}</div>
             <div class="con-specs">${specs}</div>

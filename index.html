@@ -18,6 +18,10 @@ header{background:linear-gradient(135deg,#1a1a2e,#2d2d4e);padding:14px 14px 12px
 .htxt h1{font-size:18px;font-weight:900;line-height:1.1}
 .htxt small{font-size:11px;opacity:.8}
 .btnall{background:#0AB9E6;border:none;border-radius:10px;padding:8px 13px;color:#fff;font-weight:800;cursor:pointer;font-size:12px;white-space:nowrap}
+  .navtabs{max-width:100%;display:flex;gap:8px;padding-top:12px}
+.navtab{flex:1;padding:8px;border:none;border-radius:10px;font-weight:800;font-size:13px;cursor:pointer;transition:background .15s}
+.navtab.on{background:rgba(255,255,255,.25);color:#fff}
+.navtab.off{background:rgba(0,0,0,.2);color:rgba(255,255,255,.6)}
 .swrap{max-width:720px;margin:0 auto}
 #si{width:100%;padding:11px 16px;border-radius:12px;border:none;background:rgba(255,255,255,.16);color:#fff;font-size:14px;outline:none}
 #si::placeholder{color:rgba(255,255,255,.55)}
@@ -57,6 +61,22 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
   .swrap{max-width:100%}
   .hrow{max-width:100%}
 }
+  .con-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin-top:4px}
+.con-card{background:#1a1a2e;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.07);box-shadow:0 4px 18px rgba(0,0,0,.55);transition:transform .18s}
+.con-card:hover{transform:translateY(-3px)}
+.con-img{width:100%;height:180px;object-fit:cover;display:block}
+.con-img-fall{height:180px;display:flex;align-items:center;justify-content:center;background:#12122a;font-size:56px}
+.con-info{padding:14px}
+.con-name{font-size:15px;font-weight:900;margin-bottom:5px}
+.con-desc{font-size:12px;color:#aaa;margin-bottom:8px;line-height:1.5}
+.con-specs{font-size:11px;color:#ccc;margin-bottom:10px;line-height:1.6;border-left:2px solid #0AB9E6;padding-left:8px}
+.con-price{font-size:18px;font-weight:900;color:#0AB9E6;margin-bottom:12px}
+.con-stock-si{display:inline-block;background:#25D366;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;margin-bottom:10px}
+.con-stock-no{display:inline-block;background:#555;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:800;margin-bottom:10px}
+.con-btns{display:flex;gap:8px}
+.cbped{flex:1;background:#CC0000;border:none;border-radius:10px;padding:10px;color:#fff;font-size:12px;font-weight:900;cursor:pointer}
+.cbcom{flex:1;background:#25D366;border:none;border-radius:10px;padding:10px;color:#fff;font-size:12px;font-weight:900;cursor:pointer}
+.con-loading{text-align:center;padding:40px;color:#555;font-size:14px}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(0,185,230,.6)}70%{box-shadow:0 0 0 10px rgba(0,185,230,0)}}
 .gb-new{animation:pulse 2s infinite;border-color:#0AB9E6 !important;color:#0AB9E6 !important;border-radius:30px !important;padding:6px 16px !important;background:linear-gradient(145deg,#0f1a2e,#1a2a3e) !important;box-shadow:3px 3px 6px rgba(0,0,0,.5),-1px -1px 4px rgba(0,185,230,.15) !important;font-weight:800 !important}
 .gb-new.on{background:linear-gradient(145deg,#0AB9E6,#0090b8) !important;color:#fff !important;animation:none;box-shadow:inset 2px 2px 5px rgba(0,0,0,.3) !important}
@@ -77,25 +97,96 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
   <div class="swrap">
     <input id="si" type="text" placeholder="🔍  Buscar juego..." oninput="render()"/>
   </div>
-</header>
-
-<div class="body">
-  <div class="gbar" id="gbar"></div>
-  <div class="tbar">
-    <span class="cnt" id="cl"></span>
-    <select id="ss" onchange="render()">
-      <option value="az">🔤 A – Z</option>
-      <option value="rating">⭐ Rating</option>
-      <option value="genre">🎯 Género</option>
-    </select>
+  <div class="navtabs">
+    <button class="navtab on" id="tab-juegos" onclick="setTab('juegos')">🎮 Juegos</button>
+    <button class="navtab off" id="tab-consolas" onclick="setTab('consolas')">🕹️ Consolas</button>
   </div>
-  <div class="grid" id="grid"></div>
+</header>
+<div class="body">
+  <!-- CONSOLAS -->
+  <div id="sec-consolas" style="display:none">
+    <div class="con-loading" id="con-loading">⏳ Cargando consolas...</div>
+    <div class="con-grid" id="congrid"></div>
+  </div>
+  <!-- JUEGOS -->
+  <div id="sec-juegos">
+    <div class="gbar" id="gbar"></div>
+    <div class="tbar">
+      <span class="cnt" id="cl"></span>
+      <select id="ss" onchange="render()">
+        <option value="az">🔤 A – Z</option>
+        <option value="rating">⭐ Rating</option>
+        <option value="genre">🎯 Género</option>
+      </select>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
   <footer>TS Game Store · Precio único: 350 CUP</footer>
 </div>
-
 <script>
 const WA='5355207586', PX='350 CUP';
-let aG='Todos', aCard=null;
+let aG='Todos', aCard=null, curTab='juegos';
+const SHEET_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vT2RBJAM2CAxW-PfOZCBMMWPtc3mCq429w3CY-FXtI9ZAqTbswzLKe7-hlribvwH75pyZUbHZ5YDZ88/pub?gid=0&single=true&output=csv';
+
+function setTab(t){
+  curTab=t;
+  document.getElementById('sec-juegos').style.display=t==='juegos'?'block':'none';
+  document.getElementById('sec-consolas').style.display=t==='consolas'?'block':'none';
+  document.getElementById('si').style.display=t==='juegos'?'block':'none';
+  document.getElementById('tab-juegos').className='navtab '+(t==='juegos'?'on':'off');
+  document.getElementById('tab-consolas').className='navtab '+(t==='consolas'?'on':'off');
+  if(t==='consolas') loadConsolas();
+}
+
+function pedirConsola(n,p,e){
+  e.stopPropagation();
+  const msg=`Hola, me interesa la consola: *${n}* (${p} USD)`;
+  window.open(`https://wa.me/5355207586?text=${encodeURIComponent(msg)}`,'_blank');
+}
+function compartirConsola(n,p,d,e){
+  e.stopPropagation();
+  const msg=`🕹️ *${n}*\n💰 ${p} USD\n${d}\n\n📲 Pedidos: wa.me/5355207586`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+function loadConsolas(){
+  const cg=document.getElementById('congrid');
+  const cl=document.getElementById('con-loading');
+  if(cg.children.length>0){cl.style.display='none';return;}
+  cl.style.display='block';
+  fetch(SHEET_URL)
+    .then(r=>r.text())
+    .then(csv=>{
+      cl.style.display='none';
+      const rows=csv.trim().split('\n').slice(1);
+      rows.forEach(row=>{
+        const cols=row.split(',');
+        const n=cols[0]||'';
+        const p=cols[1]||'';
+        const disp=(cols[2]||'').trim().toUpperCase();
+        const img=(cols[3]||'').trim();
+        const desc=cols[4]||'';
+        const specs=cols[5]||'';
+        const d=document.createElement('div');
+        d.className='con-card';
+        d.innerHTML=`
+          ${img?`<img class="con-img" src="${img}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${n}"/><div class="con-img-fall" style="display:none">🕹️</div>`:`<div class="con-img-fall">🕹️</div>`}
+          <div class="con-info">
+            <div class="con-name">${n}</div>
+            <div class="${disp==='SI'?'con-stock-si':'con-stock-no'}">${disp==='SI'?'✅ Disponible':'❌ Agotado'}</div>
+            <div class="con-desc">${desc}</div>
+            <div class="con-specs">${specs}</div>
+            <div class="con-price">${p} USD</div>
+            <div class="con-btns">
+              <button class="cbped" onclick="pedirConsola('${n}','${p}',event)">🛒 Pedir</button>
+              <button class="cbcom" onclick="compartirConsola('${n}','${p}','${desc}',event)">📤 Compartir</button>
+            </div>
+          </div>`;
+        cg.appendChild(d);
+      });
+    })
+    .catch(()=>{cl.textContent='⚠️ Error cargando consolas. Intenta de nuevo.';});
+}
 
 const G=[
  {t:"Animal Crossing: New Horizons",g:"Simulación",r:4.9,d:"Construye la isla de tus sueños, decórala a tu gusto y vive al ritmo de la naturaleza con tus vecinos.",c:"https://www.nintendo.com/eu/media/images/11_square_images/games_18/nintendo_switch_5/SQ_NSwitch_AnimalCrossingNewHorizons_image500w.jpg",col:"#52b788"},

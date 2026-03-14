@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Switch Catálogo 🎮</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0a0a14;color:#fff;font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+  /* HEADER */
+  header{background:linear-gradient(135deg,#E60012,#9b0000);padding:18px 16px 14px;position:sticky;top:0;z-index:99;box-shadow:0 4px 20px rgba(230,0,18,.5)}
+  .h-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;max-width:700px;margin-left:auto;margin-right:auto}
+  .logo{display:flex;align-items:center;gap:10px}
+  .logo-text{font-weight:900;font-size:20px}
+  .logo-sub{font-size:11px;opacity:.8}
+  .btn-wa-all{background:#25D366;border:none;border-radius:12px;padding:8px 14px;color:#fff;font-weight:800;cursor:pointer;font-size:12px}
+  .search-wrap{max-width:700px;margin:0 auto}
+  #searchInput{width:100%;padding:12px 16px;border-radius:12px;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:14px;outline:none}
+  #searchInput::placeholder{color:rgba(255,255,255,.6)}
+  /* BODY */
+  .body{max-width:700px;margin:0 auto;padding:16px 12px}
+  /* GENRES */
+  .genres{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;scrollbar-width:none}
+  .genres::-webkit-scrollbar{display:none}
+  .genre-btn{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:#1a1a2e;color:#fff;font-weight:600;cursor:pointer;font-size:12px;transition:background .2s}
+  .genre-btn.active{background:#E60012;border-color:#E60012}
+  /* TOOLBAR */
+  .toolbar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+  .count{font-size:13px;color:#888}
+  #sortSel{background:#1a1a2e;color:#fff;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:6px 10px;font-size:12px;outline:none}
+  .hint{text-align:center;font-size:11px;color:#444;margin-bottom:12px}
+  /* GRID */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  /* CARD */
+  .card{border-radius:16px;overflow:hidden;cursor:pointer;background:#1a1a2e;box-shadow:0 6px 24px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.07);transition:transform .2s}
+  .card:hover{transform:translateY(-4px)}
+  .card-img{position:relative;padding-top:133%;overflow:hidden}
+  .card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .3s}
+  .card-fallback{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;text-align:center}
+  .card-fallback span{font-size:38px}
+  .card-fallback p{font-size:11px;font-weight:700;margin-top:6px;line-height:1.3}
+  .badge-genre{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
+  .badge-price{position:absolute;top:8px;right:8px;background:#E60012;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:800}
+  .overlay{position:absolute;inset:0;background:rgba(0,0,0,.88);display:flex;flex-direction:column;justify-content:center;padding:14px;gap:5px;opacity:0;transition:opacity .25s;pointer-events:none}
+  .overlay.show{opacity:1}
+  .ov-title{font-size:13px;font-weight:800;line-height:1.3}
+  .ov-dev{font-size:11px;color:#aaa}
+  .ov-desc{font-size:11px;color:#ddd;line-height:1.5}
+  .ov-play{font-size:11px;color:#aaa}
+  .card-footer{padding:10px 10px 8px}
+  .card-title{font-size:12px;font-weight:700;line-height:1.3;margin-bottom:6px}
+  .card-bottom{display:flex;justify-content:space-between;align-items:center}
+  .stars{color:#FFD700;font-size:13px}
+  .btn-wa{background:#25D366;border:none;border-radius:8px;padding:5px 10px;color:#fff;font-size:11px;font-weight:700;cursor:pointer}
+  /* EMPTY */
+  .empty{text-align:center;padding:60px 20px;color:#444}
+  .empty p{font-size:16px;margin-top:12px}
+  .empty small{font-size:13px;margin-top:4px;display:block}
+  /* FOOTER */
+  footer{text-align:center;padding:20px;color:#2a2a3a;font-size:11px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-top">
+    <div class="logo">
+      <span style="font-size:28px">🎮</span>
+      <div>
+        <div class="logo-text">Switch Catálogo</div>
+        <div class="logo-sub" id="totalCount">12 juegos disponibles</div>
+      </div>
+    </div>
+    <button class="btn-wa-all" onclick="shareAll()">📤 Compartir lista</button>
+  </div>
+  <div class="search-wrap">
+    <input id="searchInput" type="text" placeholder="🔍  Buscar juego, género, desarrollador..." oninput="render()"/>
+  </div>
+</header>
+
+<div class="body">
+  <div class="genres" id="genreBar"></div>
+  <div class="toolbar">
+    <span class="count" id="countLabel"></span>
+    <select id="sortSel" onchange="render()">
+      <option value="rating">⭐ Mejor rating</option>
+      <option value="year">📅 Más reciente</option>
+      <option value="price">💰 Menor precio</option>
+    </select>
+  </div>
+  <p class="hint">Toca una portada para ver más info</p>
+  <div class="grid" id="grid"></div>
+  <footer>Switch Catálogo · Todos los derechos de los juegos pertenecen a sus respectivos dueños</footer>
+</div>
+
+<script>
+const GAMES=[
+  {id:1,title:"The Legend of Zelda: Tears of the Kingdom",genre:"Aventura",players:"1",rating:5.0,year:2023,developer:"Nintendo",price:"60 USD",cover:"https://upload.wikimedia.org/wikipedia/en/5/5c/The_Legend_of_Zelda_Tears_of_the_Kingdom.jpg",description:"Explora Hyrule y los cielos en la secuela épica de Breath of the Wild.",color:"#3a7d44"},
+  {id:2,title:"Mario Kart 8 Deluxe",genre:"Carreras",players:"1-8",rating:5.0,year:2017,developer:"Nintendo",price:"45 USD",cover:"https://upload.wikimedia.org/wikipedia/en/5/56/Mario_Kart_8_Deluxe.jpg",description:"El juego de carreras más completo de Mario con 96 pistas y multijugador.",color:"#e63946"},
+  {id:3,title:"Super Mario Odyssey",genre:"Plataformas",players:"1-2",rating:5.0,year:2017,developer:"Nintendo",price:"45 USD",cover:"https://upload.wikimedia.org/wikipedia/en/8/8d/Super_Mario_Odyssey.jpg",description:"Mario viaja por mundos increíbles con su sombrero mágico Cappy.",color:"#f4a261"},
+  {id:4,title:"Hollow Knight",genre:"Acción",players:"1",rating:5.0,year:2018,developer:"Team Cherry",price:"15 USD",cover:"https://upload.wikimedia.org/wikipedia/en/7/70/Hollow_Knight_cover.jpg",description:"Explora un vasto reino subterráneo de insectos en este metroidvania oscuro.",color:"#1d3557"},
+  {id:5,title:"Animal Crossing: New Horizons",genre:"Simulación",players:"1-8",rating:5.0,year:2020,developer:"Nintendo",price:"50 USD",cover:"https://upload.wikimedia.org/wikipedia/en/b/b7/Animal_Crossing_New_Horizons.jpg",description:"Construye la isla de tus sueños y vive al ritmo de la naturaleza.",color:"#52b788"},
+  {id:6,title:"Pokémon Scarlet",genre:"RPG",players:"1-4",rating:4.0,year:2022,developer:"Game Freak",price:"55 USD",cover:"https://upload.wikimedia.org/wikipedia/en/b/bc/Pok%C3%A9mon_Scarlet_boxart.jpg",description:"Explora Paldea en mundo abierto y conviértete en campeón Pokémon.",color:"#e9c46a"},
+  {id:7,title:"Metroid Dread",genre:"Acción",players:"1",rating:4.8,year:2021,developer:"MercurySteam",price:"50 USD",cover:"https://upload.wikimedia.org/wikipedia/en/4/4e/Metroid_Dread_cover.jpg",description:"Samus enfrenta a los robots E.M.M.I. en un planeta peligroso y desconocido.",color:"#023e8a"},
+  {id:8,title:"Stardew Valley",genre:"Simulación",players:"1-4",rating:5.0,year:2017,developer:"ConcernedApe",price:"15 USD",cover:"https://upload.wikimedia.org/wikipedia/en/f/fd/Logo_of_Stardew_Valley.png",description:"Hereda una granja y construye una nueva vida tranquila en el campo.",color:"#588157"},
+  {id:9,title:"Super Smash Bros. Ultimate",genre:"Pelea",players:"1-8",rating:5.0,year:2018,developer:"Nintendo",price:"55 USD",cover:"https://upload.wikimedia.org/wikipedia/en/9/9e/Super_Smash_Bros_Ultimate_cover_art.jpg",description:"Todos los personajes. Todos los estadios. El Smash definitivo.",color:"#e63946"},
+  {id:10,title:"Splatoon 3",genre:"Shooter",players:"1-8",rating:4.5,year:2022,developer:"Nintendo",price:"55 USD",cover:"https://upload.wikimedia.org/wikipedia/en/1/1c/Splatoon_3_cover_art.jpg",description:"Batalla de tintas online con nuevas armas y modos de juego frescos.",color:"#f4a261"},
+  {id:11,title:"Celeste",genre:"Plataformas",players:"1",rating:5.0,year:2018,developer:"Maddy Makes Games",price:"20 USD",cover:"https://upload.wikimedia.org/wikipedia/en/b/bb/Celeste_box_art_full.png",description:"Escala una montaña mientras superas tus propios miedos internos.",color:"#7b2d8b"},
+  {id:12,title:"Fire Emblem: Three Houses",genre:"RPG",players:"1",rating:4.8,year:2019,developer:"Intelligent Systems",price:"50 USD",cover:"https://upload.wikimedia.org/wikipedia/en/e/e6/Fire_Emblem_Three_Houses_box_art.jpg",description:"Lidera una de tres facciones en un mundo de estrategia táctica y drama.",color:"#d62828"},
+];
+
+const GENRES=["Todos",...new Set(GAMES.map(g=>g.genre))];
+let activeGenre="Todos";
+let activeCard=null;
+
+// Género bar
+const bar=document.getElementById("genreBar");
+GENRES.forEach(g=>{
+  const b=document.createElement("button");
+  b.className="genre-btn"+(g==="Todos"?" active":"");
+  b.textContent=g;
+  b.onclick=()=>{activeGenre=g;document.querySelectorAll(".genre-btn").forEach(x=>x.classList.remove("active"));b.classList.add("active");render()};
+  bar.appendChild(b);
+});
+
+function stars(n){
+  const f=Math.floor(n),h=n%1>=.5;
+  return "★".repeat(f)+(h?"½":"")+"☆".repeat(5-f-(h?1:0));
+}
+
+function shareGame(game){
+  const msg=`🎮 *${game.title}*\n👾 ${game.developer} · ${game.year}\n🎯 ${game.genre} · 👥 ${game.players} jugador${game.players!=="1"?"es":""}\n⭐ ${game.rating}/5\n💰 ${game.price}\n\n${game.description}`;
+  window.open("https://wa.me/?text="+encodeURIComponent(msg),"_blank");
+}
+
+function shareAll(){
+  const list=filtered();
+  const header=`🎮 *Catálogo Nintendo Switch* (${list.length} juegos)\n\n`;
+  const body=list.map((g,i)=>`${i+1}. *${g.title}* — ${g.genre} · ${g.price} · ⭐${g.rating}`).join("\n");
+  window.open("https://wa.me/?text="+encodeURIComponent(header+body),"_blank");
+}
+
+function filtered(){
+  const q=document.getElementById("searchInput").value.toLowerCase().trim();
+  const s=document.getElementById("sortSel").value;
+  let list=[...GAMES];
+  if(activeGenre!=="Todos") list=list.filter(g=>g.genre===activeGenre);
+  if(q) list=list.filter(g=>g.title.toLowerCase().includes(q)||g.developer.toLowerCase().includes(q)||g.genre.toLowerCase().includes(q));
+  if(s==="rating") list.sort((a,b)=>b.rating-a.rating);
+  if(s==="year") list.sort((a,b)=>b.year-a.year);
+  if(s==="price") list.sort((a,b)=>parseFloat(a.price)-parseFloat(b.price));
+  return list;
+}
+
+function render(){
+  const list=filtered();
+  document.getElementById("countLabel").textContent=list.length+" resultado"+(list.length!==1?"s":"");
+  const grid=document.getElementById("grid");
+  grid.innerHTML="";
+
+  if(list.length===0){
+    grid.innerHTML=`<div class="empty" style="grid-column:1/-1"><span style="font-size:48px">🕹️</span><p>No se encontraron juegos</p><small>Intenta con otro término</small></div>`;
+    return;
+  }
+
+  list.forEach(game=>{
+    const card=document.createElement("div");
+    card.className="card";
+    card.innerHTML=`
+      <div class="card-img" style="background:${game.color}">
+        <img src="${game.cover}" alt="${game.title}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="card-fallback" style="display:none;background:${game.color}"><span>🎮</span><p>${game.title}</p></div>
+        <div class="badge-genre">${game.genre}</div>
+        <div class="badge-price">${game.price}</div>
+        <div class="overlay" id="ov${game.id}">
+          <div class="ov-title">${game.title}</div>
+          <div class="ov-dev">${game.developer} · ${game.year}</div>
+          <div class="ov-desc">${game.description}</div>
+          <div class="ov-play">👥 ${game.players} jugador${game.players!=="1"?"es":""}</div>
+          <div class="stars">${stars(game.rating)}</div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <div class="card-title">${game.title}</div>
+        <div class="card-bottom">
+          <span class="stars">${stars(game.rating)}</span>
+          <button class="btn-wa" onclick="event.stopPropagation();shareGame(${JSON.stringify(game).replace(/"/g,'&quot;')})">📤 WA</button>
+        </div>
+      </div>
+    `;
+    card.onclick=()=>{
+      const ov=document.getElementById("ov"+game.id);
+      const showing=ov.classList.contains("show");
+      if(activeCard&&activeCard!==ov) activeCard.classList.remove("show");
+      ov.classList.toggle("show",!showing);
+      activeCard=showing?null:ov;
+    };
+    grid.appendChild(card);
+  });
+}
+
+render();
+</script>
+</body>
+</html>

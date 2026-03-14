@@ -77,6 +77,56 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
 .cbped{flex:1;background:#CC0000;border:none;border-radius:10px;padding:10px;color:#fff;font-size:12px;font-weight:900;cursor:pointer}
 .cbcom{flex:1;background:#25D366;border:none;border-radius:10px;padding:10px;color:#fff;font-size:12px;font-weight:900;cursor:pointer}
 .con-loading{text-align:center;padding:40px;color:#555;font-size:14px}
+/* Ventana de detalles de consola */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; top: 0; 
+    width: 100%; height: 100%; 
+    background-color: rgba(0,0,0,0.95);
+    overflow-y: auto;
+    backdrop-filter: blur(5px);
+}
+.modal-content {
+    background: #1a1a2e;
+    margin: 5% auto;
+    padding: 20px;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 20px;
+    border: 1px solid #3d3d5e;
+    position: relative;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+}
+.close-modal {
+    position: absolute;
+    right: 20px; top: 10px;
+    font-size: 35px;
+    color: #fff;
+    cursor: pointer;
+}
+.gallery-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.gallery-img {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid #444;
+}
+.modal-desc {
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #ddd;
+    background: #0a0a14;
+    padding: 15px;
+    border-radius: 10px;
+}
 @keyframes shine{0%{background-position:-200% center}100%{background-position:200% center}}
 @keyframes borderflow{0%,100%{border-color:#0AB9E6}50%{border-color:#00e5ff}}
 .gb-new{
@@ -121,6 +171,17 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
   </div>
 </header>
 <div class="body">
+ <div id="consoleModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="document.getElementById('consoleModal').style.display='none'">&times;</span>
+        <div id="modalGallery" class="gallery-container"></div>
+        <h2 id="modalTitle" style="margin-bottom:15px; color:#fff;"></h2>
+        <div id="modalDesc" class="modal-desc"></div>
+        <button class="bped" id="modalWapp" style="width:100%; margin-top:20px; padding:18px; font-weight:bold;">
+           🛒 Pedir por WhatsApp
+        </button>
+    </div>
+</div>
   <!-- CONSOLAS -->
   <div id="sec-consolas" style="display:none">
     <div class="con-loading" id="con-loading">⏳ Cargando consolas...</div>
@@ -166,7 +227,36 @@ function compartirConsola(n,p,d,e){
   const msg=`🕹️ *${n}*\n💰 ${p} USD\n${d}\n\n📲 Pedidos: wa.me/5355207586`;
   window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
 }
-
+function verConsola(nombre, imagenes, descripcion, precio) {
+    const modal = document.getElementById('consoleModal');
+    const gallery = document.getElementById('modalGallery');
+    gallery.innerHTML = '';
+    if (imagenes) {
+        const fotos = imagenes.split('|');
+        fotos.forEach(ruta => {
+            if(ruta.trim() !== "") {
+                const img = document.createElement('img');
+                img.src = ruta.trim();
+                img.className = 'gallery-img';
+                img.alt = nombre;
+                gallery.appendChild(img);
+            }
+        });
+    }
+    document.getElementById('modalTitle').innerText = nombre;
+    document.getElementById('modalDesc').innerText = descripcion;
+    document.getElementById('modalWapp').onclick = () => {
+        const msg = `Hola, me interesa la consola: ${nombre} (${precio})`;
+        window.open(`https://wa.me/5355207586?text=${encodeURIComponent(msg)}`);
+    };
+    modal.style.display = 'block';
+}
+window.onclick = function(event) {
+    const modal = document.getElementById('consoleModal');
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}
 function loadConsolas(){
   const cg=document.getElementById('congrid');
   const cl=document.getElementById('con-loading');
@@ -188,9 +278,7 @@ function loadConsolas(){
         const d=document.createElement('div');
         d.className='con-card';
         d.innerHTML=`
-          ${img?`<img class="con-img" src="${img}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${n}"/><div class="con-img-fall" style="display:none">🕹️</div>`:`<div class="con-img-fall">🕹️</div>`}
-          <div class="con-info">
-            <div class="con-name">${n}</div>
+          ${img?`<img class="con-img" src="${img}" onerror="this.style.di${img?`<img class="con-img" src="${img.split('|')[0]}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${n}" onclick="verConsola('${n}','${img}','${desc}','${p}')" style="cursor:pointer"/><div class="con-img-fall" style="display:none" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`:`<div class="con-img-fall" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`}
             <div class="${disp==='SI'?'con-stock-si':'con-stock-no'}">${disp==='SI'?'✅ Disponible':'❌ Agotado'}</div>
             <div class="con-desc">${desc}</div>
             <div class="con-specs">${specs}</div>

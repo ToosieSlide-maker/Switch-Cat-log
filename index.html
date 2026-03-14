@@ -259,7 +259,7 @@ function filtered(){
   const s=document.getElementById("ss").value;
   let list=[...G];
   if(aG!=="Todos")list=list.filter(x=>x.g===aG);
-  if(q)list=list.filter(x=>x.t.toLowerCase().includes(q)||x.g.toLowerCase().includes(q));
+  if(q){const words=q.split(' ').filter(w=>w.length>0);list=list.filter(x=>words.every(w=>x.t.toLowerCase().includes(w)||x.g.toLowerCase().includes(w)));};
   if(s==="az")list.sort((a,b)=>a.t.localeCompare(b.t));
   else if(s==="rating")list.sort((a,b)=>b.r-a.r);
   else if(s==="genre")list.sort((a,b)=>a.g.localeCompare(b.g)||a.t.localeCompare(b.t));

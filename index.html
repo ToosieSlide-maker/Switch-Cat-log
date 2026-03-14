@@ -156,17 +156,17 @@ function loadConsolas(){
   cl.style.display='block';
   fetch(SHEET_URL)
     .then(r=>r.text())
-    .then(csv=>{
+    .then(tsv=>{
       cl.style.display='none';
-      const rows=csv.trim().split('\n').slice(1);
+      const rows=tsv.trim().split('\n').slice(1);
       rows.forEach(row=>{
-        const cols=row.split('  ');
-        const n=cols[0]||'';
-        const p=cols[1]||'';
+        const cols=row.split('\u0009');
+        const n=(cols[0]||'').trim();
+        const p=(cols[1]||'').trim();
         const disp=(cols[2]||'').trim().toUpperCase();
         const img=(cols[3]||'').trim();
-        const desc=cols[4]||'';
-        const specs=cols[5]||'';
+        const desc=(cols[4]||'').trim();
+        const specs=(cols[5]||'').trim();
         const d=document.createElement('div');
         d.className='con-card';
         d.innerHTML=`

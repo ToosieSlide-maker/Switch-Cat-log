@@ -173,7 +173,10 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
     <button class="btnall" onclick="shareAll()">📤 Lista</button>
   </div>
   <div class="swrap">
-    <input id="si" type="text" placeholder="🔍  Buscar juego..." oninput="render()"/>
+   <div style="position:relative;width:100%">
+  <input id="si" type="text" placeholder="🔍  Buscar juego..." oninput="render();document.getElementById('clrbtn').style.display=this.value?'flex':'none'" style="width:100%;padding-right:40px"/>
+  <button id="clrbtn" onclick="document.getElementById('si').value='';render();this.style.display='none'" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.15);border:none;border-radius:50%;width:22px;height:22px;color:#fff;font-size:14px;cursor:pointer;align-items:center;justify-content:center;line-height:1">✕</button>
+</div>
   </div>
  <div class="navtabs">
     <button class="navtab on" id="tab-juegos" onclick="setTab('juegos')"><span>🎮</span>Juegos</button>

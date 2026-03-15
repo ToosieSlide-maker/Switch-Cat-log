@@ -218,9 +218,8 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
 <script>
 const WA='5355207586', PX='350 CUP';
 let aG='Todos', aCard=null, curTab='juegos';
-fetch(SHEET_URL).then(r=>r.text()).then(tsv=>{window._consolasData=tsv;}).catch(()=>{});
 const SHEET_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vT2RBJAM2CAxW-PfOZCBMMWPtc3mCq429w3CY-FXtI9ZAqTbswzLKe7-hlribvwH75pyZUbHZ5YDZ88/pub?gid=0&single=true&output=tsv';
-
+fetch(SHEET_URL).then(r=>r.text()).then(tsv=>{window._consolasData=tsv;}).catch(()=>{});
 function setTab(t){
   curTab=t;
   document.getElementById('sec-juegos').style.display=t==='juegos'?'block':'none';

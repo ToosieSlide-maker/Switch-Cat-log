@@ -218,6 +218,7 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
 <script>
 const WA='5355207586', PX='350 CUP';
 let aG='Todos', aCard=null, curTab='juegos';
+fetch(SHEET_URL).then(r=>r.text()).then(tsv=>{window._consolasData=tsv;}).catch(()=>{});
 const SHEET_URL='https://docs.google.com/spreadsheets/d/e/2PACX-1vT2RBJAM2CAxW-PfOZCBMMWPtc3mCq429w3CY-FXtI9ZAqTbswzLKe7-hlribvwH75pyZUbHZ5YDZ88/pub?gid=0&single=true&output=tsv';
 
 function setTab(t){
@@ -275,37 +276,35 @@ function loadConsolas(){
   const cl=document.getElementById('con-loading');
   if(cg.children.length>0){cl.style.display='none';return;}
   cl.style.display='block';
-  fetch(SHEET_URL)
-    .then(r=>r.text())
-    .then(tsv=>{
-      cl.style.display='none';
-      const rows=tsv.trim().split('\n').slice(1);
-      rows.forEach(row=>{
-        const cols=row.split('\u0009');
-        const n=(cols[0]||'').trim();
-        const p=(cols[1]||'').trim();
-        const disp=(cols[2]||'').trim().toUpperCase();
-        const img=(cols[3]||'').trim();
-        const desc=(cols[4]||'').trim();
-        const specs=(cols[5]||'').trim();
-        const d=document.createElement('div');
-        d.className='con-card';
-        d.innerHTML=`
-          ${img?`<img class="con-img" src="${img.split('|')[0]}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${n}" onclick="verConsola('${n}','${img}','${desc}','${p}')" style="cursor:pointer"/><div class="con-img-fall" style="display:none" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`:`<div class="con-img-fall" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`}
-          <div class="con-info">
-            <div class="con-name">${n}</div>
-            <div class="${disp==='SI'?'con-stock-si':'con-stock-no'}">${disp==='SI'?'✅ Disponible':'❌ Agotado'}</div>
-            <div class="con-specs">${specs}</div>
-            <div class="con-price">${p} USD</div>
-            <div class="con-btns">
-              <button class="cbped" onclick="pedirConsola('${n}','${p}',event)">🛒 Pedir</button>
-              <button class="cbcom" onclick="compartirConsola('${n}','${p}','${desc}',event)">📤 Compartir</button>
-            </div>
-          </div>`;
-        cg.appendChild(d);
-      });
-    })
-    .catch(()=>{cl.textContent='⚠️ Error cargando consolas. Intenta de nuevo.';});
+  const run=(tsv)=>{
+    cl.style.display='none';
+    const rows=tsv.trim().split('\n').slice(1);
+    rows.forEach(row=>{
+      const cols=row.split('\u0009');
+      const n=(cols[0]||'').trim();
+      const p=(cols[1]||'').trim();
+      const disp=(cols[2]||'').trim().toUpperCase();
+      const img=(cols[3]||'').trim();
+      const desc=(cols[4]||'').trim();
+      const specs=(cols[5]||'').trim();
+      const d=document.createElement('div');
+      d.className='con-card';
+      d.innerHTML=`
+        ${img?`<img class="con-img" src="${img.split('|')[0]}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${n}" onclick="verConsola('${n}','${img}','${desc}','${p}')" style="cursor:pointer"/><div class="con-img-fall" style="display:none" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`:`<div class="con-img-fall" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`}
+        <div class="con-info">
+          <div class="con-name">${n}</div>
+          <div class="${disp==='SI'?'con-stock-si':'con-stock-no'}">${disp==='SI'?'✅ Disponible':'❌ Agotado'}</div>
+          <div class="con-specs">${specs}</div>
+          <div class="con-price">${p} USD</div>
+          <div class="con-btns">
+            <button class="cbped" onclick="pedirConsola('${n}','${p}',event)">🛒 Pedir</button>
+            <button class="cbcom" onclick="compartirConsola('${n}','${p}','${desc}',event)">📤 Compartir</button>
+          </div>
+        </div>`;
+      cg.appendChild(d);
+    });
+  };
+  window._consolasData?run(window._consolasData):fetch(SHEET_URL).then(r=>r.text()).then(run).catch(()=>{cl.textContent='⚠️ Error cargando consolas. Intenta de nuevo.';});
 }
 
 const G=[

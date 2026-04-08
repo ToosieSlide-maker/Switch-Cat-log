@@ -262,6 +262,15 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
     padding: 15px;
     border-radius: 10px;
 }
+@keyframes pwa-slide{from{opacity:0;transform:translateY(-100%)}to{opacity:1;transform:translateY(0)}}
+#pwa-banner{display:none;align-items:center;gap:10px;padding:10px 14px;background:linear-gradient(135deg,#1a1a2e,#16213e);border-bottom:1px solid rgba(10,185,230,.2);animation:pwa-slide .35s ease;position:relative;z-index:90}
+#pwa-banner.on{display:flex}
+#pwa-banner-icon{width:36px;height:36px;border-radius:9px;flex-shrink:0;object-fit:contain;background:#000;padding:2px}
+#pwa-banner-txt{flex:1;min-width:0}
+#pwa-banner-txt strong{display:block;font-size:13px;font-weight:800;color:#fff}
+#pwa-banner-txt span{font-size:11px;color:#888}
+#pwa-install-btn{background:linear-gradient(135deg,#0AB9E6,#0090b8);border:none;border-radius:10px;padding:8px 16px;color:#fff;font-size:12px;font-weight:900;cursor:pointer;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent}
+#pwa-dismiss-btn{background:transparent;border:none;color:#555;font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0;-webkit-tap-highlight-color:transparent;line-height:1}
 @keyframes shine{0%{background-position:-200% center}100%{background-position:200% center}}
 @keyframes borderflow{0%,100%{border-color:#0AB9E6}50%{border-color:#00e5ff}}
 .gb-new{
@@ -419,6 +428,15 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
 </script>
 </head>
 <body>
+<div id="pwa-banner">
+  <img id="pwa-banner-icon" src="logo.png" alt="TS Epic Den" onerror="this.style.display='none'"/>
+  <div id="pwa-banner-txt">
+    <strong>TS Epic Den</strong>
+    <span>Instalar como app en tu dispositivo</span>
+  </div>
+  <button id="pwa-install-btn">📲 Instalar</button>
+  <button id="pwa-dismiss-btn" aria-label="Cerrar">×</button>
+</div>
 <header>
   <div class="hrow">
     <div class="hlogo">
@@ -1461,6 +1479,39 @@ history.replaceState({tab:'juegos'},'');
     navigator.serviceWorker.addEventListener('controllerchange', ()=>location.reload());
   });
 }
+
+(function(){
+  let _pwaPrompt = null;
+  const banner  = document.getElementById('pwa-banner');
+  const btnInst = document.getElementById('pwa-install-btn');
+  const btnDism = document.getElementById('pwa-dismiss-btn');
+
+  window.addEventListener('beforeinstallprompt', function(e){
+    e.preventDefault();
+    _pwaPrompt = e;
+    try { if(sessionStorage.getItem('pwa-dismissed')) return; } catch(_){}
+    banner.classList.add('on');
+  });
+
+  btnInst.addEventListener('click', function(){
+    if(!_pwaPrompt) return;
+    banner.classList.remove('on');
+    _pwaPrompt.prompt();
+    _pwaPrompt.userChoice.then(function(r){
+      if(r.outcome === 'accepted') _pwaPrompt = null;
+    });
+  });
+
+  btnDism.addEventListener('click', function(){
+    banner.classList.remove('on');
+    try { sessionStorage.setItem('pwa-dismissed','1'); } catch(_){}
+  });
+
+  window.addEventListener('appinstalled', function(){
+    banner.classList.remove('on');
+    _pwaPrompt = null;
+  });
+})();
 </script>
 <script src="noticias.js"></script>    
 </body>

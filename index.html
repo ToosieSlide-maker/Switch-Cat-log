@@ -936,6 +936,7 @@ function loadConsolas(){
       if(a.disp!=='SI'&&b.disp==='SI') return 1;
       return 0;
     });
+    const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     parsed.forEach(({n,p,disp,img,desc,specs})=>{
       const d=document.createElement('div');
       d.className='con-card';
@@ -949,15 +950,16 @@ function loadConsolas(){
         const c=e.currentTarget;
         verConsola(c.dataset.nombre,c.dataset.img,c.dataset.desc,c.dataset.precio);
       });
+      const imgSrc=esc(img.split('|')[0]);
       d.innerHTML=`
-        ${img?`<img class="con-img" src="${img.split('|')[0]}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${n}"/><div class="con-img-fall" style="display:none">🕹️</div>`:`<div class="con-img-fall">🕹️</div>`}
+        ${img?`<img class="con-img" src="${imgSrc}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${esc(n)}"/><div class="con-img-fall" style="display:none">🕹️</div>`:`<div class="con-img-fall">🕹️</div>`}
         <div class="con-info">
-          <div class="con-name">${n}</div>
+          <div class="con-name">${esc(n)}</div>
           <div class="${disp==='SI'?'con-stock-si':'con-stock-no'}">${disp==='SI'?'✅ Disponible':'❌ Agotado'}</div>
-          <div class="con-specs">${specs}</div>
-          <div class="con-price">${p} USD</div>
+          <div class="con-specs">${esc(specs)}</div>
+          <div class="con-price">${esc(p)} USD</div>
          <div class="con-btns">
-           <button class="cbped" data-img="${img.split('|')[0]}" ${disp!=='SI'?'disabled style="opacity:.35;cursor:not-allowed"':''} onclick="event.stopPropagation();addConsoleToCart('${n}','${p}',this)">🛒 Agregar</button>
+           <button class="cbped" data-img="${imgSrc}" ${disp!=='SI'?'disabled style="opacity:.35;cursor:not-allowed"':''} onclick="event.stopPropagation();addConsoleToCart(this.closest('.con-card').dataset.nombre,this.closest('.con-card').dataset.precio,this)">🛒 Agregar</button>
             <button class="cbcom" onclick="event.stopPropagation();const c=this.closest('.con-card');compartirConsola(c.dataset.nombre,c.dataset.precio,c.dataset.desc,event)">📤 Compartir</button>
           </div>
         </div>`;

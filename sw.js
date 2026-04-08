@@ -1,7 +1,10 @@
-const CACHE = 'ts-store-v8.9.0';
+const CACHE = 'ts-store-v8.9.2';
 const STATIC = [
   './index.html',
-  './games.js'
+  './games.js',
+  './site.webmanifest',
+  './icon-192.png',
+  './icon-512.png'
 ];
 
 self.addEventListener('install', e=>{

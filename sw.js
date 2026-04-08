@@ -1,4 +1,4 @@
-const CACHE = 'ts-store-v8.8';
+const CACHE = 'ts-store-v8.9';
 const STATIC = [
   './index.html',
   './games.js'
@@ -25,15 +25,14 @@ self.addEventListener('fetch', e=>{
 
   if(url.hostname === 'docs.google.com'){
     e.respondWith(
-      caches.open(CACHE).then(cache=>
-        cache.match(e.request).then(cached=>{
-          const fresh = fetch(e.request).then(res=>{
-            const resClone = res.clone();
-            cache.put(e.request, resClone);
-            return res;
-          });
-          return cached || fresh;
-        })
+      fetch(e.request).then(res=>{
+        if(res.ok){
+          const resClone=res.clone();
+          caches.open(CACHE).then(c=>c.put(e.request,resClone));
+        }
+        return res;
+      }).catch(()=>
+        caches.open(CACHE).then(cache=>cache.match(e.request))
       )
     );
     return;

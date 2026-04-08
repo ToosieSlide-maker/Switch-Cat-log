@@ -80,7 +80,7 @@ header{background:rgba(10,10,20,.6);backdrop-filter:blur(20px);-webkit-backdrop-
 #tab-consolas.on .sw-outline{fill:currentColor;stroke:currentColor}
 #tab-consolas.on .sw-cut{fill:currentColor}
 #tab-consolas.on .sw-line{stroke:currentColor}
-#tab-consolas.on .sw-screen{fill:currentColora;stroke:currentColor}
+#tab-consolas.on .sw-screen{fill:currentColor;stroke:currentColor}
 .navtab span{font-size:10px;font-weight:700;letter-spacing:.3px}
 @keyframes springback{0%{transform:scale(.82)}60%{transform:scale(1.18)}80%{transform:scale(.95)}100%{transform:scale(1)}}
 .navtab-spring svg{animation:springback .35s cubic-bezier(.36,.07,.19,.97) forwards}
@@ -854,11 +854,11 @@ iconNoticias.src=t==='noticias'?'news2.svg':'news.svg';
 function pedirConsola(n,p,e){
   e.stopPropagation();
   const msg=`Hola, me interesa la consola: *${n}* (${p} USD)`;
-  window.open(`https://wa.me/5355207586?text=${encodeURIComponent(msg)}`,'_blank');
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
 }
 function compartirConsola(n,p,d,e){
   e.stopPropagation();
-  const msg=`🕹️ *${n}*\n💰 ${p} USD\n${d}\n\n📲 Pedidos: wa.me/5355207586`;
+  const msg=`🕹️ *${n}*\n💰 ${p} USD\n${d}\n\n📲 Pedidos: wa.me/${WA}`;
   window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
 }
 function verConsola(nombre, imagenes, descripcion, precio) {
@@ -882,7 +882,7 @@ function verConsola(nombre, imagenes, descripcion, precio) {
     document.getElementById('modalDesc').innerText = descripcion;
     document.getElementById('modalWapp').onclick = () => {
       const msg = `🎮 *Pedido TS Epic Den*\n\n📦 *Consola:*\n${nombre} (${precio} USD)\n\n💰 *Total: ${precio} USD*`;
-        window.open(`https://wa.me/5355207586?text=${encodeURIComponent(msg)}`);
+        window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`);
     };
     modal.style.display = 'block';
 }
@@ -890,13 +890,17 @@ window.onclick = function(event) {
   const modal = document.getElementById('consoleModal');
   if(event.target==modal) modal.style.display='none';
 }
+let _consolasTs=0;
 function loadConsolas(){
   const cg=document.getElementById('congrid');
   const cl=document.getElementById('con-loading');
-  if(cg.children.length>0){cl.style.display='none';return;}
+  cg.innerHTML='';
   cl.style.display='block';
   const run=(tsv)=>{
+    _consolasTs=Date.now();
+    window._consolasData=tsv;
     cl.style.display='none';
+    cg.innerHTML='';
     const rows=tsv.trim().split('\n').slice(1);
     const parsed=rows.map(row=>{
       const cols=row.split('\u0009');
@@ -932,7 +936,15 @@ function loadConsolas(){
       cg.appendChild(d);
     });
   };
-  window._consolasData?run(window._consolasData):fetch(SHEET_URL).then(r=>r.text()).then(run).catch(()=>{cl.textContent='⚠️ Error cargando consolas. Intenta de nuevo.';});
+  const stale=Date.now()-_consolasTs>300000;
+  if(window._consolasData&&!stale){
+    run(window._consolasData);
+  } else {
+    fetch(SHEET_URL).then(r=>r.text()).then(run).catch(()=>{
+      if(window._consolasData) run(window._consolasData);
+      else cl.textContent='⚠️ Error cargando consolas. Intenta de nuevo.';
+    });
+  }
 }
 // Genres
   document.getElementById('hc').textContent=G.length+' juegos · Nintendo Switch';

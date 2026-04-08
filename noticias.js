@@ -234,14 +234,15 @@ async function traducirTexto(texto, from = 'en', to = 'es') {
     '&dt=t&q=' + encodeURIComponent(texto);
 
   try {
-    const r = await fetch(url);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 4000);
+    const r = await fetch(url, { signal: controller.signal });
+    clearTimeout(timeout);
+    if (!r.ok) return texto;
     const d = await r.json();
-
     if (!Array.isArray(d) || !Array.isArray(d[0])) return texto;
-
     return d[0].map(parte => parte[0]).join('').trim() || texto;
   } catch (e) {
-    console.warn('traducirTexto falló:', e);
     return texto;
   }
 }
@@ -283,8 +284,7 @@ async function obtenerConsolasEnOferta() {
   const url = (typeof SHEET_URL !== 'undefined') ? SHEET_URL : '';
   if (!url) return [];
   try {
-    const r = await fetch(url);
-    const tsv = await r.text();
+    const tsv = (window._consolasData) ? window._consolasData : await fetch(url).then(r=>r.text());
     const rows = tsv.trim().split('\n').slice(1);
     const resultado = [];
     rows.forEach(function(row) {
@@ -340,29 +340,21 @@ function intentarAbrirJuegoPendiente(intentos = 0) {
 
   const buscado = normalizarTexto(gameKey);
 
-  // Busca elementos que contengan exactamente el título del juego
- const candidatos = Array.from(document.querySelectorAll('h1,h2,h3,h4,div,article,a,button,span,p'))
-  .filter(el => {
-    const txt = normalizarTexto(el.textContent || '');
-    return txt && txt.includes(buscado);
-  })
-  .sort((a, b) => {
-    const aLen = normalizarTexto(a.textContent || '').length;
-    const bLen = normalizarTexto(b.textContent || '').length;
-    return aLen - bLen;
-  });
+  // Busca en los títulos de las cartas del catálogo (selector específico, no todo el DOM)
+  const candidatos = Array.from(document.querySelectorAll('.ctit, .card .ctit'))
+    .filter(el => {
+      const txt = normalizarTexto(el.textContent || '');
+      return txt && txt.includes(buscado);
+    });
 
   if (candidatos.length) {
     const tituloEl = candidatos[0];
 
-    // intenta encontrar el contenedor/carta clicable más cercano
-   const clickable =
-  tituloEl.closest('button') ||
-  tituloEl.closest('a') ||
-  tituloEl.closest('[onclick]') ||
-  tituloEl.closest('article') ||
-  tituloEl.closest('.game-card') ||
-  tituloEl.closest('div');
+    // encuentra la carta clicable más cercana
+    const clickable =
+      tituloEl.closest('.card') ||
+      tituloEl.closest('[onclick]') ||
+      tituloEl.closest('article');
 
     if (clickable) {
       clickable.scrollIntoView({ behavior: 'smooth', block: 'center' });

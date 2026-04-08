@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -908,13 +909,17 @@ window.onclick = function(event) {
   const modal = document.getElementById('consoleModal');
   if(event.target==modal) modal.style.display='none';
 }
+let _consolasTs=0;
 function loadConsolas(){
   const cg=document.getElementById('congrid');
   const cl=document.getElementById('con-loading');
-  if(cg.children.length>0){cl.style.display='none';return;}
+  cg.innerHTML='';
   cl.style.display='block';
   const run=(tsv)=>{
+    _consolasTs=Date.now();
+    window._consolasData=tsv;
     cl.style.display='none';
+    cg.innerHTML='';
     const rows=tsv.trim().split('\n').slice(1);
     const parsed=rows.map(row=>{
       const cols=row.split('\u0009');
@@ -923,7 +928,7 @@ function loadConsolas(){
         p:(cols[1]||'').trim(),
         disp:(cols[2]||'').trim().toUpperCase(),
         img:(cols[3]||'').trim(),
-        desc:(cols[4]||'').trim().replace(/'/g,"&#39;").replace(/[\n\r]/g,' '),
+        desc:(cols[4]||'').trim().replace(/[\n\r]/g,' '),
         specs:(cols[5]||'').trim()
       };
     }).filter(x=>x.n);
@@ -935,22 +940,40 @@ function loadConsolas(){
     parsed.forEach(({n,p,disp,img,desc,specs})=>{
       const d=document.createElement('div');
       d.className='con-card';
+      d.style.cursor='pointer';
+      d.dataset.nombre=n;
+      d.dataset.img=img;
+      d.dataset.desc=desc;
+      d.dataset.precio=p;
+      d.addEventListener('click',function(e){
+        if(e.target.closest('.con-btns')) return;
+        const c=e.currentTarget;
+        verConsola(c.dataset.nombre,c.dataset.img,c.dataset.desc,c.dataset.precio);
+      });
       d.innerHTML=`
-        ${img?`<img class="con-img" src="${img.split('|')[0]}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${n}" onclick="verConsola('${n}','${img}','${desc}','${p}')" style="cursor:pointer"/><div class="con-img-fall" style="display:none" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`:`<div class="con-img-fall" onclick="verConsola('${n}','${img}','${desc}','${p}')">🕹️</div>`}
+        ${img?`<img class="con-img" src="${img.split('|')[0]}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" alt="${n}"/><div class="con-img-fall" style="display:none">🕹️</div>`:`<div class="con-img-fall">🕹️</div>`}
         <div class="con-info">
           <div class="con-name">${n}</div>
           <div class="${disp==='SI'?'con-stock-si':'con-stock-no'}">${disp==='SI'?'✅ Disponible':'❌ Agotado'}</div>
           <div class="con-specs">${specs}</div>
           <div class="con-price">${p} USD</div>
          <div class="con-btns">
-           <button class="cbped" data-img="${img.split('|')[0]}" ${disp!=='SI'?'disabled style="opacity:.35;cursor:not-allowed"':''} onclick="addConsoleToCart('${n}','${p}',this)">🛒 Agregar</button>
-            <button class="cbcom" onclick="compartirConsola('${n}','${p}','${desc}',event)">📤 Compartir</button>
+           <button class="cbped" data-img="${img.split('|')[0]}" ${disp!=='SI'?'disabled style="opacity:.35;cursor:not-allowed"':''} onclick="event.stopPropagation();addConsoleToCart('${n}','${p}',this)">🛒 Agregar</button>
+            <button class="cbcom" onclick="event.stopPropagation();const c=this.closest('.con-card');compartirConsola(c.dataset.nombre,c.dataset.precio,c.dataset.desc,event)">📤 Compartir</button>
           </div>
         </div>`;
       cg.appendChild(d);
     });
   };
-  window._consolasData?run(window._consolasData):fetch(SHEET_URL).then(r=>r.text()).then(run).catch(()=>{cl.textContent='⚠️ Error cargando consolas. Intenta de nuevo.';});
+  const stale=Date.now()-_consolasTs>300000;
+  if(window._consolasData&&!stale){
+    run(window._consolasData);
+  } else {
+    fetch(SHEET_URL).then(r=>r.text()).then(run).catch(()=>{
+      if(window._consolasData) run(window._consolasData);
+      else cl.textContent='⚠️ Error cargando consolas. Intenta de nuevo.';
+    });
+  }
 }
 // Genres
   document.getElementById('hc').textContent=G.length+' juegos · Nintendo Switch';

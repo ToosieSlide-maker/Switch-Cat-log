@@ -418,6 +418,22 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
   background:#fff;
   transform:scale(1.4);
 }
+/* ── FTUE Onboarding Slide ── */
+@keyframes ftueStepIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.ftue-slide{background:linear-gradient(135deg,#0a0a14 0%,#1a1a2e 60%,#0f1628 100%)}
+.ftue-inner{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;padding:14px 18px;gap:5px}
+.ftue-tagline{font-size:9px;font-weight:800;color:#0AB9E6;letter-spacing:1.2px;margin-bottom:1px}
+.ftue-title{font-size:16px;font-weight:900;color:#fff;margin-bottom:6px;line-height:1.2}
+.ftue-steps{display:flex;flex-direction:column;gap:8px}
+.ftue-step{display:flex;align-items:center;gap:10px;opacity:0;animation:ftueStepIn .4s ease forwards}
+.ftue-icon-wrap{font-size:15px;width:32px;height:32px;background:rgba(10,185,230,.12);border:1px solid rgba(10,185,230,.28);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ftue-step-label{font-size:12px;font-weight:800;color:#fff;line-height:1.2}
+.ftue-step-desc{font-size:10px;color:rgba(255,255,255,.42);line-height:1.3}
+@media(min-width:600px){
+  .ftue-inner{padding:18px 28px;gap:8px}
+  .ftue-steps{flex-direction:row;gap:18px}
+  .ftue-step{flex-direction:column;align-items:center;text-align:center;flex:1}
+}   
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-MYVGQ3S8H8"></script>
@@ -1139,56 +1155,52 @@ function shareAll(){
 }
 function hexToRgba(hex,a){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return`rgba(${r},${g},${b},${a})`;}
 function initFeaturedBanner(){
-function getBannerImageCandidates(url) {
-  const out = [];
-  const push = u => { if (u && !out.includes(u)) out.push(u); };
+  function getBannerImageCandidates(url) {
+    const out = [];
+    const push = u => { if (u && !out.includes(u)) out.push(u); };
+    const base = url
+      .replace('_Alt01', '')
+      .replace('/11_square_images/', '/10_share_images/')
+      .replace('/games_18/', '/games_15/')
+      .replace('/nintendo_switch_5/', '/nintendo_switch_4/')
+      .replace('/nintendo_switch_download_software/', '/nintendo_switch_download_software_1/')
+      .replace('/wii_u_20/', '/wiiu_14/')
+      .replace('/wii_u_download_software_3/', '/wiiu_download_software_5/')
+      .replace('/SQ_WiiU_', '/SI_WiiU_')
+      .replace('/SQ_', '/H2x1_');
+    push(base.replace('/1x1_', '/16x9_').replace('_image500w', '_esES_image1600w'));
+    push(base.replace('/1x1_', '/16x9_').replace('_image500w', '_image1600w'));
+    push(base.replace('/1x1_', '/2x1_').replace('_image500w', '_esES_image1600w'));
+    push(base.replace('/1x1_', '/2x1_').replace('_image500w', '_image1600w'));
+    push(url);
+    return out;
+  }
 
-  const base = url
-    .replace('_Alt01', '')
-    .replace('/11_square_images/', '/10_share_images/')
-    .replace('/games_18/', '/games_15/')
-    .replace('/nintendo_switch_5/', '/nintendo_switch_4/')
-    .replace('/nintendo_switch_download_software/', '/nintendo_switch_download_software_1/')
-    .replace('/wii_u_20/', '/wiiu_14/')
-    .replace('/wii_u_download_software_3/', '/wiiu_download_software_5/')
-    .replace('/SQ_WiiU_', '/SI_WiiU_')
-    .replace('/SQ_', '/H2x1_');
+  const wrap = document.getElementById('featured-banner-wrap');
+  if(!wrap || typeof G === 'undefined') return;
+  const topGames = G.filter(g => g.r >= 4.7).sort((a,b) => b.r - a.r);
+  if(!topGames.length) return;
 
-  push(
-    base
-      .replace('/1x1_', '/16x9_')
-      .replace('_image500w', '_esES_image1600w')
-  );
+  const totalSlides = topGames.length + 1;
+  let currentIndex = 0, isPaused = false, autoplayTimer = null;
 
-  push(
-    base
-      .replace('/1x1_', '/16x9_')
-      .replace('_image500w', '_image1600w')
-  );
+  // Slide 0: Welcome FTUE (pure CSS, zero images)
+  const welcomeSlide =
+    '<div class="fb-slide ftue-slide" style="position:absolute;inset:0;opacity:1;transition:opacity .6s ease;pointer-events:all">' +
+      '<div class="ftue-inner">' +
+        '<div class="ftue-tagline">✦ TU TIENDA DE JUEGOS ✦</div>' +
+        '<div class="ftue-title">¿Cómo funciona?</div>' +
+        '<div class="ftue-steps">' +
+          '<div class="ftue-step" style="animation-delay:0ms"><div class="ftue-icon-wrap">🔍</div><div><div class="ftue-step-label">Busca</div><div class="ftue-step-desc">Filtra por género o nombre</div></div></div>' +
+          '<div class="ftue-step" style="animation-delay:200ms"><div class="ftue-icon-wrap">❤️</div><div><div class="ftue-step-label">Guarda</div><div class="ftue-step-desc">Crea tu lista de favoritos</div></div></div>' +
+          '<div class="ftue-step" style="animation-delay:400ms"><div class="ftue-icon-wrap">📲</div><div><div class="ftue-step-label">Pide</div><div class="ftue-step-desc">Envía tu pedido por WhatsApp</div></div></div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
 
-  push(
-    base
-      .replace('/1x1_', '/2x1_')
-      .replace('_image500w', '_esES_image1600w')
-  );
-
-  push(
-    base
-      .replace('/1x1_', '/2x1_')
-      .replace('_image500w', '_image1600w')
-  );
-
-  push(url);
-
-  return out;
-}
-  const wrap=document.getElementById('featured-banner-wrap');
-  if(!wrap||typeof G==='undefined')return;
-  const topGames=G.filter(g=>g.r>=4.7).sort((a,b)=>b.r-a.r);
-  if(!topGames.length)return;
-  let currentIndex=0,isPaused=false;
-  const slides=topGames.map((g,i)=>
-    '<div class="fb-slide" style="position:absolute;inset:0;opacity:'+(i===0?'1':'0')+';transition:opacity .6s ease;pointer-events:'+(i===0?'all':'none')+'">' +
+  // Slides 1…n: game slides (todos arrancan ocultos)
+  const gameSlides = topGames.map(g =>
+    '<div class="fb-slide" style="position:absolute;inset:0;opacity:0;transition:opacity .6s ease;pointer-events:none">' +
     '<img src="'+((g.banner ? [g.banner, g.c] : getBannerImageCandidates(g.c))[0] || '')+'" data-candidates=\''+JSON.stringify(g.banner ? [g.banner, g.c] : getBannerImageCandidates(g.c)).replace(/'/g,'&apos;')+'\' data-try="0" style="width:100%;height:100%;object-fit:cover;object-position:center;display:block;background:#0f0f1a" onerror="(function(img){var list=JSON.parse(img.getAttribute(\'data-candidates\')||\'[]\');var next=parseInt(img.getAttribute(\'data-try\')||\'0\',10)+1;if(next<list.length){img.setAttribute(\'data-try\',next);img.src=list[next];}})(this)">' +
     '<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(0,0,0,.85))"></div>' +
     '<div style="position:absolute;bottom:14px;left:14px;right:80px">' +
@@ -1197,44 +1209,62 @@ function getBannerImageCandidates(url) {
     '<div style="font-size:11px;color:rgba(255,255,255,.6)">'+(g.s?g.s+' &nbsp;·&nbsp; ':'')+' '+g.r+'/5 ⭐</div>' +
     '</div></div>'
   ).join('');
-   const dots='';
-  wrap.style.cssText='border-radius:16px;overflow:hidden;cursor:pointer;position:relative;height:190px;margin-bottom:12px;border:1px solid rgba(255,255,255,.10);box-shadow:0 4px 20px rgba(0,0,0,.65)';
- wrap.innerHTML = slides + `
+
+  wrap.style.cssText = 'border-radius:16px;overflow:hidden;cursor:pointer;position:relative;height:190px;margin-bottom:12px;border:1px solid rgba(255,255,255,.10);box-shadow:0 4px 20px rgba(0,0,0,.65)';
+
+  wrap.innerHTML = welcomeSlide + gameSlides + `
 <div class="fb-arrows">
   <div class="fb-arrow" onclick="event.stopPropagation();fbPrev()">‹</div>
   <div class="fb-arrow" onclick="event.stopPropagation();fbNext()">›</div>
 </div>
-
 <div class="fb-dots-viewport">
   <div class="fb-dots-track" id="fbDotsTrack">
-    <div class="fb-dot"></div>
-    <div class="fb-dot"></div>
     <div class="fb-dot center"></div>
     <div class="fb-dot"></div>
     <div class="fb-dot"></div>
+    <div class="fb-dot"></div>
+    <div class="fb-dot"></div>
   </div>
-</div>
-`;
-  wrap.onclick=function(){openGameSheet(topGames[currentIndex]);};
- window.fbGoTo=function(n){
-    const sEls=wrap.querySelectorAll('.fb-slide');
-    sEls[currentIndex].style.opacity='0';
-    sEls[currentIndex].style.pointerEvents='none';
-    currentIndex=(n+topGames.length)%topGames.length;
-    const track=document.getElementById('fbDotsTrack');
-    if(track){
-      const dotEls=track.querySelectorAll('.fb-dot');
-      dotEls.forEach(d=>d.classList.remove('center'));
-      dotEls[currentIndex%5].classList.add('center');
-    }
-    sEls[currentIndex].style.opacity='1';
-    sEls[currentIndex].style.pointerEvents='all';
+</div>`;
+
+  // Click: welcome slide no abre nada; game slides usan offset -1
+  wrap.onclick = function(){
+    if(currentIndex === 0) return;
+    openGameSheet(topGames[currentIndex - 1]);
   };
-  window.fbPrev=function(){window.fbGoTo(currentIndex-1);};
-  window.fbNext=function(){window.fbGoTo(currentIndex+1);};
-  wrap.addEventListener('touchstart',()=>{isPaused=true;},{passive:true});
-  wrap.addEventListener('touchend',()=>{setTimeout(()=>{isPaused=false;},2500);},{passive:true});
-  setInterval(()=>{if(!isPaused)window.fbGoTo(currentIndex+1);},4500);
+
+  window.fbGoTo = function(n){
+    const sEls = wrap.querySelectorAll('.fb-slide');
+    sEls[currentIndex].style.opacity = '0';
+    sEls[currentIndex].style.pointerEvents = 'none';
+    currentIndex = (n + totalSlides) % totalSlides;
+    const track = document.getElementById('fbDotsTrack');
+    if(track){
+      const dotEls = track.querySelectorAll('.fb-dot');
+      dotEls.forEach(d => d.classList.remove('center'));
+      dotEls[currentIndex % 5].classList.add('center');
+    }
+    sEls[currentIndex].style.opacity = '1';
+    sEls[currentIndex].style.pointerEvents = 'all';
+    clearTimeout(autoplayTimer);
+    scheduleNext();
+  };
+
+  window.fbPrev = function(){ window.fbGoTo(currentIndex - 1); };
+  window.fbNext = function(){ window.fbGoTo(currentIndex + 1); };
+
+  function scheduleNext(){
+    const delay = currentIndex === 0 ? 10000 : 4500;
+    autoplayTimer = setTimeout(function(){
+      if(!isPaused){ window.fbGoTo(currentIndex + 1); }
+      else { scheduleNext(); }
+    }, delay);
+  }
+
+  wrap.addEventListener('touchstart', () => { isPaused = true; }, {passive:true});
+  wrap.addEventListener('touchend', () => { setTimeout(() => { isPaused = false; }, 2500); }, {passive:true});
+
+  scheduleNext();
 }
     function getCardGlowByRating(r){
   const rating = Number(r) || 0;

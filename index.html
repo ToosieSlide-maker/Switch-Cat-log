@@ -1175,10 +1175,10 @@ function initFeaturedBanner(){
     push(url);
     return out;
   }
-
+// Tope del Hero y Tambien el limite de valoraciones
   const wrap = document.getElementById('featured-banner-wrap');
   if(!wrap || typeof G === 'undefined') return;
-  const topGames = G.filter(g => g.r >= 4.7).sort((a,b) => b.r - a.r);
+  const topGames = G.filter(g => g.r >= 4.7).sort((a,b) => b.r - a.r).slice(0, 7);
   if(!topGames.length) return;
 
   const totalSlides = topGames.length + 1;

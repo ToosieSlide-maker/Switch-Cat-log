@@ -993,7 +993,7 @@ function loadConsolas(){
 }
 // Genres
   document.getElementById('hc').textContent=G.length+' juegos · Nintendo Switch';
-const GENRES=["Todos",...new Set(G.map(x=>x.g)).values()].sort((a,b)=>a==="Todos"?-1:b==="Todos"?1:a.localeCompare(b));
+const GENRES=["Todos",...new Set(G.flatMap(x=>x.g.split('/').map(s=>s.trim()))).values()].sort((a,b)=>a==="Todos"?-1:b==="Todos"?1:a.localeCompare(b));
  const btnNew=document.createElement("button");
 btnNew.className="gb gb-new";
 btnNew.style.display='inline-flex';
@@ -1043,7 +1043,7 @@ if(aG==='__new__') list=G.slice(-10).reverse();
 else if(aG==='__multi__') list=list.filter(x=>x.m===true);
 else if(aG==='__coop__') list=list.filter(x=>x.coop===true);
 else if(aG==='__split__') list=list.filter(x=>x.split===true);
-else if(aG!=='Todos') list=list.filter(x=>x.g===aG);
+else if(aG!=='Todos') list=list.filter(x=>x.g.split('/').map(s=>s.trim()).includes(aG));
 
 if(q){
   const words=q.split(' ').filter(w=>w.length>0);

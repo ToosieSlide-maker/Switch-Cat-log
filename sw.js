@@ -1,4 +1,4 @@
-const CACHE = 'ts-store-v9.0.3';
+const CACHE = 'ts-store-v9.0.4';
 const STATIC = [
   './index.html',
   './games.js',

@@ -526,7 +526,7 @@ function renderTopCharts() {
 }
 function renderProximosLanzamientos() {
   if (typeof G === 'undefined') return '';
-  const estrenos = G.filter(g => g.badge === 'Estreno');
+  const estrenos = G.filter(g => g.badge && g.badge.toLowerCase() === 'estreno');
   if (!estrenos.length) return '';
 
   const tarjetas = estrenos.map(g => {

@@ -1071,11 +1071,11 @@ document.getElementById('gsDesc').textContent=game.d||'';
 const allPhotos=(game.fotos||[]).filter(Boolean);
 const capturas=document.getElementById('gsCapturas');
 if(allPhotos.length>0){
- const slides=allPhotos.map(url=>{
+const slides=allPhotos.map((url,i)=>{
   if(url.endsWith('.m3u8')){
-    return `<div class="gs-carousel-slide"><video src="${url}" autoplay muted playsinline loop style="width:100%;height:100%;object-fit:cover;display:block" controls></video></div>`;
+    return `<div class="gs-carousel-slide"><video ${i===0?`src="${url}"`:`data-src="${url}"`} autoplay muted playsinline loop style="width:100%;height:100%;object-fit:cover;display:block" controls></video></div>`;
   }
-  return `<div class="gs-carousel-slide"><img src="${url}" onerror="this.style.display='none'" onclick="openImgViewer('${url}')" style="width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in"/></div>`;
+  return `<div class="gs-carousel-slide"><img ${i===0?`src="${url}"`:`data-src="${url}"`} onerror="this.style.display='none'" onclick="openImgViewer('${url}')" style="width:100%;height:100%;object-fit:cover;display:block;cursor:zoom-in"/></div>`;
 }).join('');
   const dots=allPhotos.length>1?`<div class="gs-dots">${allPhotos.map((_,i)=>`<div class="gs-dot${i===0?' on':''}"></div>`).join('')}</div>`:'';
   capturas.innerHTML=`<div style="font-size:13px;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:.5px">CAPTURAS</div><div class="gs-carousel"><div class="gs-carousel-track">${slides}</div>${dots}</div>`;
@@ -1083,10 +1083,17 @@ if(allPhotos.length>0){
   const track=capturas.querySelector('.gs-carousel-track');
   const dotEls=capturas.querySelectorAll('.gs-dot');
   let currentSlide=0;
- const goToSlide=n=>{
+const goToSlide=n=>{
     currentSlide=Math.max(0,Math.min(n,allPhotos.length-1));
     track.style.transform=`translateX(-${currentSlide*100}%)`;
     dotEls.forEach((d,i)=>d.classList.toggle('on',i===currentSlide));
+    [currentSlide-1,currentSlide,currentSlide+1].forEach(idx=>{
+      if(idx<0||idx>=allPhotos.length)return;
+      const slide=track.querySelectorAll('.gs-carousel-slide')[idx];
+      if(!slide)return;
+      const el=slide.querySelector('[data-src]');
+      if(el){el.src=el.dataset.src;el.removeAttribute('data-src');}
+    });
   };
   let tsX=0,tsY=0;
   track.addEventListener('touchstart',e=>{tsX=e.touches[0].clientX;tsY=e.touches[0].clientY;},{passive:true});

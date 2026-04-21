@@ -7,15 +7,25 @@
   const s = document.createElement('style');
   s.id = 'ts-noticias-styles';
   s.textContent = `
+    // DESPUÉS
+    @keyframes ts-rgb-border {
+      0%   { box-shadow: 0 0 0 2px #ff0080, 0 4px 18px rgba(0,0,0,.5); }
+      25%  { box-shadow: 0 0 0 2px #7b2ff7, 0 4px 18px rgba(0,0,0,.5); }
+      50%  { box-shadow: 0 0 0 2px #00bfff, 0 4px 18px rgba(0,0,0,.5); }
+      75%  { box-shadow: 0 0 0 2px #00ff88, 0 4px 18px rgba(0,0,0,.5); }
+      100% { box-shadow: 0 0 0 2px #ff0080, 0 4px 18px rgba(0,0,0,.5); }
+    }
     .ts-card {
-      transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s cubic-bezier(.4,0,.2,1);
-      will-change: transform;
+      transition: box-shadow .3s cubic-bezier(.4,0,.2,1);
     }
     .ts-card:hover {
-      transform: translateY(-10px) scale(1.04);
-      box-shadow: 0 20px 50px rgba(10,185,230,.22), 0 8px 24px rgba(0,0,0,.7) !important;
+      transform: none;
     }
-    .ts-card:hover .ts-cimg { transform: scale(1.08); }
+    .ts-card:hover .ts-cimg { transform: none; }
+    .ts-card:active {
+      transform: none !important;
+      animation: ts-rgb-border 1s linear;
+    }
 
     .ts-spotlight {
       transition: transform .3s cubic-bezier(.4,0,.2,1), box-shadow .3s cubic-bezier(.4,0,.2,1);

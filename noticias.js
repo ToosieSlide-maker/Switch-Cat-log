@@ -7,13 +7,12 @@
   const s = document.createElement('style');
   s.id = 'ts-noticias-styles';
   s.textContent = `
-    // DESPUÉS
-    @keyframes ts-rgb-border {
-      0%   { box-shadow: 0 0 0 2px #ff0080, 0 4px 18px rgba(0,0,0,.5); }
-      25%  { box-shadow: 0 0 0 2px #7b2ff7, 0 4px 18px rgba(0,0,0,.5); }
-      50%  { box-shadow: 0 0 0 2px #00bfff, 0 4px 18px rgba(0,0,0,.5); }
-      75%  { box-shadow: 0 0 0 2px #00ff88, 0 4px 18px rgba(0,0,0,.5); }
-      100% { box-shadow: 0 0 0 2px #ff0080, 0 4px 18px rgba(0,0,0,.5); }
+    @keyframes ts-rgb-walk {
+      0%   { box-shadow: 4px 0 14px 2px #ff0080, 0 0 0 1.5px rgba(255,0,128,.5); }
+      25%  { box-shadow: 0 4px 14px 2px #7b2ff7, 0 0 0 1.5px rgba(123,47,247,.5); }
+      50%  { box-shadow: -4px 0 14px 2px #00bfff, 0 0 0 1.5px rgba(0,191,255,.5); }
+      75%  { box-shadow: 0 -4px 14px 2px #39ff14, 0 0 0 1.5px rgba(57,255,20,.5); }
+      100% { box-shadow: 4px 0 14px 2px #ff0080, 0 0 0 1.5px rgba(255,0,128,.5); }
     }
     .ts-card {
       transition: box-shadow .3s cubic-bezier(.4,0,.2,1);
@@ -24,7 +23,7 @@
     .ts-card:hover .ts-cimg { transform: none; }
     .ts-card:active {
       transform: none !important;
-      animation: ts-rgb-border 1s linear;
+      animation: ts-rgb-walk 1.4s linear infinite;
     }
 
     .ts-spotlight {

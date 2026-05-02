@@ -20,7 +20,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:#0a0a14;color:#fff;font-family:'Inter','Segoe UI',system-ui,sans-serif;min-height:100vh}
+html{background:#0a0a14}body{background:transparent;color:#fff;font-family:'Inter','Segoe UI',system-ui,sans-serif;min-height:100vh}
 header{background:rgba(10,10,20,.6);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);padding:14px 14px 12px;position:sticky;top:0;z-index:99;border-bottom:1px solid rgba(255,255,255,.06);box-shadow:0 1px 0 rgba(255,255,255,.04)}
 .hrow{display:flex;align-items:center;justify-content:space-between;max-width:720px;margin:0 auto 11px}
 .hlogo{display:flex;align-items:center;gap:10px}
@@ -89,7 +89,7 @@ header{background:rgba(10,10,20,.6);backdrop-filter:blur(20px);-webkit-backdrop-
 #si{width:100%;padding:11px 44px 11px 20px;border-radius:50px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.1);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#fff;font-size:14px;outline:none;transition:border-color .25s,box-shadow .25s}
 #si:focus{border-color:rgba(10,185,230,.8);box-shadow:0 0 0 2px rgba(10,185,230,.15),0 0 12px rgba(10,185,230,.2)}
 #si::placeholder{color:rgba(255,255,255,.35)}
-.body{max-width:720px;margin:0 auto;padding:13px 11px 80px}
+.body{max-width:720px;margin:0 auto;padding:13px 11px 80px;position:relative;z-index:1}
 .gbar{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:11px;scrollbar-width:none;position:sticky;top:var(--header-h,0px);z-index:97;background:rgba(10,10,20,.7);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);padding-top:8px;margin-left:-11px;margin-right:-11px;padding-left:11px;padding-right:11px}
 .gbar::-webkit-scrollbar{display:none}
 .gb{flex-shrink:0;padding:6px 13px;border-radius:20px;border:1px solid rgba(255,255,255,.12);background:#1a1a2e;color:#fff;font-weight:600;cursor:pointer;font-size:11px;transition:background .15s;overflow:hidden;-webkit-tap-highlight-color:transparent}
@@ -543,6 +543,7 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
 })();
 </script>
 <!-- ===== FIN AUTH WALL ===== -->
+<canvas id="bg-particles" style="position:fixed;inset:0;pointer-events:none;z-index:0;display:block"></canvas>
 <div id="pwa-banner">
   <img id="pwa-banner-icon" src="logo.png" alt="TS Epic Den" onerror="this.style.display='none'"/>
   <div id="pwa-banner-txt">
@@ -1642,5 +1643,57 @@ history.replaceState({tab:'juegos'},'');
 </script>
 <script src="noticias.js"></script>
 <script src="auth.js"></script>
+<script>
+(function(){
+  if(window.matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  var c=document.getElementById('bg-particles');
+  if(!c)return;
+  var ctx=c.getContext('2d');
+  var N=38,pts=[];
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize,{passive:true});
+  for(var i=0;i<N;i++){
+    pts.push({
+      x:Math.random()*window.innerWidth,
+      y:Math.random()*window.innerHeight,
+      r:Math.random()*1.6+.3,
+      vx:(Math.random()-.5)*.28,
+      vy:(Math.random()-.5)*.28,
+      a:Math.random()*.35+.08,
+      col:Math.random()<.75?'10,185,230':'204,0,0'
+    });
+  }
+  var running=true;
+  document.addEventListener('visibilitychange',function(){running=!document.hidden;if(running)requestAnimationFrame(frame);});
+  function frame(){
+    if(!running)return;
+    ctx.clearRect(0,0,c.width,c.height);
+    for(var i=0;i<N;i++){
+      var p=pts[i];
+      p.x+=p.vx;p.y+=p.vy;
+      if(p.x<0)p.x=c.width;else if(p.x>c.width)p.x=0;
+      if(p.y<0)p.y=c.height;else if(p.y>c.height)p.y=0;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,6.2832);
+      ctx.fillStyle='rgba('+p.col+','+p.a+')';
+      ctx.fill();
+      for(var j=i+1;j<N;j++){
+        var q=pts[j];
+        var dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<110){
+          ctx.beginPath();
+          ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+          ctx.strokeStyle='rgba(10,185,230,'+(((.14*(1-d/110))).toFixed(3))+')';
+          ctx.lineWidth=.45;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
 </body>
 </html>

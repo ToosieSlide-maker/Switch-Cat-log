@@ -1,0 +1,32 @@
+Eres un Senior UI/UX Designer y Frontend Developer especializado en interfaces premium y modernas (2025-2026). 
+
+Mi proyecto es el sitio web "TS Epic Den" y quiero que redesignes COMPLETAMENTE la página de inicio de sesión / login (la que tiene el logo, el título "Acceso exclusivo", los campos de email y contraseña, el botón "Iniciar sesión", el botón "Registrarse" y el mensaje de error).
+
+REGLAS OBLIGATORIAS (nunca las rompas):
+1. NUNCA modifiques ningún archivo ni línea de código sin mi aprobación explícita.
+2. Lo que ya está funcionando (funcionalidad, autenticación, conexión con Google Sheets, lógica de aprobación, etc.) debe seguir funcionando EXACTAMENTE igual.
+3. Solo vas a cambiar lo visual (CSS, Tailwind, estilos, animaciones). No toques lógica de JavaScript ni backend.
+4. Mantén la misma estructura de carpetas y nombres de archivos que ya existen.
+5. Usa solo tecnologías que ya tenga el proyecto (Tailwind, CSS, JS vanilla si es necesario). No instales nada nuevo sin preguntarme.
+
+Diseño objetivo (debes seguir esto al 100%):
+- Fondo: negro profundo con gradiente suave de azul cian → magenta neón → púrpura oscuro. 
+- Sobre el fondo: partículas suaves y brillantes que flotan lentamente (estilo nebulosa sutil, no distrae). 
+- Efecto extra: mesh geométrico muy tenue o glow que reacciona ligeramente al movimiento del cursor.
+- Contenedor principal (la caja de login): glassmorphism total → fondo semi-transparente con blur fuerte, bordes redondeados (25-30px), borde fino con glow neón cian/magenta que brilla suavemente, sombra suave para que “flote”.
+- Logo: más grande, centrado arriba, con efecto glow neón sutil y animación de pulse muy lenta y elegante.
+- Título "TS Epic Den" en tipografía bold moderna y épica. Debajo "Acceso exclusivo" con letra más fina y un pequeño icono neón.
+- Campos de email y contraseña: estilo glass (semi-transparente, bordes redondeados). Al hacer focus: borde se ilumina con neón cian fuerte + leve escalado.
+- Botón "Iniciar sesión": gradiente neón azul → magenta, texto blanco bold, hover con glow más intenso y escala suave.
+- Botón "Registrarse": estilo glass o outline neón (más sutil).
+- Mensajes de error y “Necesitas aprobación del administrador”: en un pill elegante con neón rojo suave (no feo).
+- Animaciones sutiles: la tarjeta de glass se materializa al cargar con fade + scale suave. Todo debe sentirse premium y fluido.
+- Totalmente responsive (en móvil se ve igual de espectacular).
+- Paleta general: negro profundo + neón cian, magenta y púrpura. Vibra premium, futurista y épica (como un juego AAA o app de streaming de lujo).
+
+Tarea paso a paso:
+1. Analiza primero la página actual de login.
+2. Dame un resumen claro de cómo vas a implementar este diseño (solo idea y cambios visuales, sin código todavía).
+3. Espera mi respuesta. Solo cuando yo te diga “APLICA” o “APLICA el diseño” podrás modificar los archivos.
+
+¿Entendido? Si sí, comienza ahora mismo analizando la página de login actual y dame el resumen del plan de rediseño.

@@ -101,13 +101,8 @@
     document.getElementById('auth-submit-btn').textContent = isReg ? 'Registrarse' : 'Iniciar sesión';
     const tl = document.getElementById('auth-tab-login');
     const tr = document.getElementById('auth-tab-register');
-    if (isReg) {
-      tr.style.background = '#0AB9E6'; tr.style.color = '#fff';
-      tl.style.background = 'transparent'; tl.style.color = '#555';
-    } else {
-      tl.style.background = '#0AB9E6'; tl.style.color = '#fff';
-      tr.style.background = 'transparent'; tr.style.color = '#555';
-    }
+    tl.classList.toggle('at-active', !isReg);
+    tr.classList.toggle('at-active', isReg);
   }
 
   function init() {

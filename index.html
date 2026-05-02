@@ -434,6 +434,29 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
   .ftue-steps{flex-direction:row;gap:18px}
   .ftue-step{flex-direction:column;align-items:center;text-align:center;flex:1}
 }   
+/* ===== AUTH WALL REDESIGN ===== */
+@keyframes authLogoRing{0%,100%{box-shadow:0 0 0 3px rgba(10,185,230,.3),0 0 22px rgba(10,185,230,.25),0 4px 20px rgba(0,0,0,.7)}50%{box-shadow:0 0 0 5px rgba(10,185,230,.55),0 0 36px rgba(10,185,230,.45),0 4px 20px rgba(0,0,0,.7)}}
+@keyframes authFadeIn{from{opacity:0;transform:translateY(28px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes authBtnPulse{0%,100%{box-shadow:0 4px 20px rgba(10,185,230,.35),0 0 0 0 rgba(10,185,230,0)}60%{box-shadow:0 4px 28px rgba(10,185,230,.55),0 0 0 8px rgba(10,185,230,.07)}}
+#auth-wall{overflow:hidden}
+.auth-card{position:relative;z-index:1;width:100%;max-width:360px;background:rgba(255,255,255,.04);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(10,185,230,.18);border-radius:24px;padding:32px 28px 28px;box-shadow:0 8px 40px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.05),inset 0 1px 0 rgba(255,255,255,.09);animation:authFadeIn .55s cubic-bezier(.22,.68,0,1.18) both}
+.auth-logo-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:24px}
+.auth-logo-wrap img{width:76px;height:76px;border-radius:20px;object-fit:contain;background:#000;padding:4px;animation:authLogoRing 3s ease-in-out infinite}
+.auth-logo-wrap h1{font-size:21px;font-weight:900;margin-top:13px;margin-bottom:3px;background:linear-gradient(135deg,#fff 40%,#0AB9E6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.auth-logo-wrap p{font-size:10px;color:rgba(10,185,230,.65);letter-spacing:2px;text-transform:uppercase;font-weight:700}
+.auth-tabs{display:flex;background:rgba(255,255,255,.05);border-radius:14px;padding:4px;margin-bottom:20px;border:1px solid rgba(255,255,255,.07)}
+.auth-tabs button{flex:1;padding:10px;border:none;border-radius:10px;cursor:pointer;font-size:13px;font-weight:800;background:transparent;color:rgba(255,255,255,.28);transition:all .25s;font-family:inherit}
+.auth-tabs button.at-active{background:linear-gradient(135deg,#0AB9E6,#0090b8);color:#fff;box-shadow:0 2px 14px rgba(10,185,230,.4)}
+.auth-fields{display:flex;flex-direction:column;gap:11px}
+.auth-input{width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.05);color:#fff;font-size:14px;outline:none;font-family:inherit;transition:border-color .25s,box-shadow .25s,background .25s}
+.auth-input:focus{border-color:rgba(10,185,230,.7);background:rgba(10,185,230,.06);box-shadow:0 0 0 3px rgba(10,185,230,.12),0 0 18px rgba(10,185,230,.14)}
+.auth-input::placeholder{color:rgba(255,255,255,.22)}
+.auth-submit{width:100%;padding:15px;border:none;border-radius:12px;background:linear-gradient(135deg,#0AB9E6,#0090b8);color:#fff;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;animation:authBtnPulse 2.8s ease-in-out infinite;transition:filter .2s,transform .15s}
+.auth-submit:hover{filter:brightness(1.1)}
+.auth-submit:active{transform:scale(.97);filter:brightness(.88);animation:none}
+.auth-submit:disabled{opacity:.55;animation:none;cursor:default}
+.auth-note{margin-top:20px;font-size:11px;color:rgba(255,255,255,.18);text-align:center;max-width:280px;line-height:1.6;position:relative;z-index:1}
+#auth-particles{position:absolute;inset:0;pointer-events:none;z-index:0}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-MYVGQ3S8H8"></script>
@@ -447,24 +470,78 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
 <body>
 <!-- ===== AUTH WALL ===== -->
 <div id="auth-wall" style="display:flex;position:fixed;inset:0;z-index:10000;background:#0a0a14;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px">
-  <img src="logo.png" alt="TS Epic Den" style="width:72px;height:72px;border-radius:18px;object-fit:contain;background:#000;padding:4px;margin-bottom:12px;box-shadow:0 4px 20px rgba(0,0,0,.6)"/>
-  <h1 style="font-size:20px;font-weight:900;color:#fff;margin-bottom:4px">TS Epic Den</h1>
-  <p style="font-size:12px;color:#555;margin-bottom:28px;letter-spacing:.3px">Acceso exclusivo</p>
-  <div style="display:flex;background:#1a1a2e;border-radius:14px;padding:4px;margin-bottom:20px;width:100%;max-width:320px;border:1px solid rgba(255,255,255,.06)">
-    <button id="auth-tab-login" style="flex:1;padding:10px;border:none;border-radius:10px;cursor:pointer;font-size:13px;font-weight:800;background:#0AB9E6;color:#fff;transition:all .2s;font-family:inherit">Iniciar sesión</button>
-    <button id="auth-tab-register" style="flex:1;padding:10px;border:none;border-radius:10px;cursor:pointer;font-size:13px;font-weight:800;background:transparent;color:#555;transition:all .2s;font-family:inherit">Registrarse</button>
-  </div>
-  <div style="width:100%;max-width:320px;display:flex;flex-direction:column;gap:11px">
-    <input id="auth-email" type="email" placeholder="Correo electrónico" autocomplete="email" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-size:14px;outline:none;font-family:inherit;transition:border-color .2s"/>
-    <input id="auth-pwd" type="password" placeholder="Contraseña" autocomplete="current-password" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-size:14px;outline:none;font-family:inherit;transition:border-color .2s"/>
-    <div id="auth-pwd2-wrap" style="display:none">
-      <input id="auth-pwd2" type="password" placeholder="Confirmar contraseña" autocomplete="new-password" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-size:14px;outline:none;font-family:inherit"/>
+  <canvas id="auth-particles"></canvas>
+  <div class="auth-card">
+    <div class="auth-logo-wrap">
+      <img src="logo.png" alt="TS Epic Den"/>
+      <h1>TS Epic Den</h1>
+      <p>Acceso exclusivo</p>
     </div>
-    <div id="auth-msg" style="display:none;font-size:13px;text-align:center;padding:11px 14px;border-radius:10px;line-height:1.5"></div>
-    <button id="auth-submit-btn" style="width:100%;padding:15px;border:none;border-radius:12px;background:linear-gradient(135deg,#0AB9E6,#0090b8);color:#fff;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;transition:filter .2s;box-shadow:0 4px 16px rgba(10,185,230,.3)">Iniciar sesión</button>
+    <div class="auth-tabs">
+      <button id="auth-tab-login" class="at-active">Iniciar sesión</button>
+      <button id="auth-tab-register">Registrarse</button>
+    </div>
+    <div class="auth-fields">
+      <input id="auth-email" class="auth-input" type="email" placeholder="Correo electrónico" autocomplete="email"/>
+      <input id="auth-pwd" class="auth-input" type="password" placeholder="Contraseña" autocomplete="current-password"/>
+      <div id="auth-pwd2-wrap" style="display:none">
+        <input id="auth-pwd2" class="auth-input" type="password" placeholder="Confirmar contraseña" autocomplete="new-password"/>
+      </div>
+      <div id="auth-msg" style="display:none;font-size:13px;text-align:center;padding:11px 14px;border-radius:10px;line-height:1.5"></div>
+      <button id="auth-submit-btn" class="auth-submit">Iniciar sesión</button>
+    </div>
   </div>
-  <p style="margin-top:22px;font-size:11px;color:#3a3a5a;text-align:center;max-width:280px;line-height:1.5">Necesitas aprobación del administrador para acceder al catálogo</p>
+  <p class="auth-note">Necesitas aprobación del administrador para acceder al catálogo</p>
 </div>
+<script>
+(function(){
+  var c=document.getElementById('auth-particles');
+  if(!c)return;
+  var ctx=c.getContext('2d');
+  var pts=[];
+  var N=55;
+  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
+  resize();
+  window.addEventListener('resize',resize);
+  for(var i=0;i<N;i++){
+    pts.push({
+      x:Math.random()*window.innerWidth,
+      y:Math.random()*window.innerHeight,
+      r:Math.random()*1.8+.4,
+      vx:(Math.random()-.5)*.35,
+      vy:(Math.random()-.5)*.35,
+      a:Math.random()*.6+.15,
+      col:Math.random()<.7?'10,185,230':'204,0,0'
+    });
+  }
+  function frame(){
+    ctx.clearRect(0,0,c.width,c.height);
+    for(var i=0;i<N;i++){
+      var p=pts[i];
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0)p.x=c.width; if(p.x>c.width)p.x=0;
+      if(p.y<0)p.y=c.height; if(p.y>c.height)p.y=0;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      ctx.fillStyle='rgba('+p.col+','+p.a+')';
+      ctx.fill();
+      for(var j=i+1;j<N;j++){
+        var q=pts[j];
+        var dx=p.x-q.x,dy=p.y-q.y,d=Math.sqrt(dx*dx+dy*dy);
+        if(d<120){
+          ctx.beginPath();
+          ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);
+          ctx.strokeStyle='rgba(10,185,230,'+((.18*(1-d/120)).toFixed(3))+')';
+          ctx.lineWidth=.5;
+          ctx.stroke();
+        }
+      }
+    }
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
 <!-- ===== FIN AUTH WALL ===== -->
 <div id="pwa-banner">
   <img id="pwa-banner-icon" src="logo.png" alt="TS Epic Den" onerror="this.style.display='none'"/>

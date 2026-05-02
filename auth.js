@@ -1,5 +1,5 @@
 (function () {
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxQPLu4QSVJaZp2rJ3Yc5r59jc4KmbwQ7qXL5tAWA5VuJXuYeHDW335g8CYArvLMQdNdw/exec';
+  const SCRIPT_URL = '/api/auth';
   const TOKEN_KEY = 'ts_auth_token';
   let currentTab = 'login';
 
@@ -7,8 +7,7 @@
     const res = await fetch(SCRIPT_URL, {
       method: 'POST',
       body: JSON.stringify(data),
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      redirect: 'follow'
+      headers: { 'Content-Type': 'application/json' }
     });
     return res.json();
   }

@@ -1,6 +1,7 @@
 import express, { type Express } from "express";
 import cors from "cors";
 import pinoHttp from "pino-http";
+import path from "path";
 import router from "./routes";
 import { logger } from "./lib/logger";
 
@@ -30,5 +31,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", router);
+
+const siteRoot = path.resolve("/home/runner/workspace");
+app.use("/Switch-Cat-log", express.static(siteRoot));
+app.get("/Switch-Cat-log", (_req, res) => {
+  res.sendFile(path.join(siteRoot, "index.html"));
+});
+app.get("/Switch-Cat-log/", (_req, res) => {
+  res.sendFile(path.join(siteRoot, "index.html"));
+});
 
 export default app;

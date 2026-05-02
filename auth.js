@@ -15,12 +15,37 @@
   function getWall() { return document.getElementById('auth-wall'); }
 
   function showWall() {
-    getWall().style.display = 'flex';
+    var w = getWall();
+    w.style.opacity = '1';
+    w.style.display = 'flex';
+    setCheckingState(false);
     document.getElementById('auth-email').focus();
   }
 
   function hideWall() {
-    getWall().style.display = 'none';
+    var w = getWall();
+    w.style.transition = 'opacity .45s ease';
+    w.style.opacity = '0';
+    setTimeout(function () {
+      w.style.display = 'none';
+      w.style.opacity = '1';
+      w.style.transition = '';
+    }, 460);
+  }
+
+  function setCheckingState(on) {
+    var card = document.querySelector('.auth-card');
+    var msg = document.getElementById('auth-msg');
+    if (on) {
+      if (card) card.style.opacity = '0.45';
+      msg.textContent = 'Verificando sesión...';
+      msg.style.color = '#0AB9E6';
+      msg.style.background = 'rgba(10,185,230,.08)';
+      msg.style.display = 'block';
+    } else {
+      if (card) card.style.opacity = '1';
+      msg.style.display = 'none';
+    }
   }
 
   function setMsg(msg, ok) {
@@ -45,6 +70,7 @@
   async function checkToken() {
     const token = localStorage.getItem(TOKEN_KEY);
     if (!token) { showWall(); return; }
+    setCheckingState(true);
     try {
       const res = await authCall({ action: 'check', token });
       if (res.ok) { hideWall(); showLogoutBtn(res.email); }

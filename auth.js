@@ -1,6 +1,8 @@
 (function () {
   const SCRIPT_URL = '/api/auth';
   const TOKEN_KEY = 'ts_auth_token';
+  const VERSION_KEY = 'ts_site_version';
+  const VERSION_URL = 'version.json';
   let currentTab = 'login';
 
   async function authCall(data) {
@@ -13,17 +15,34 @@
   }
 
   function getWall() { return document.getElementById('auth-wall'); }
+  function getForm() { return document.getElementById('auth-form-content'); }
+  function getLoading() { return document.getElementById('auth-loading'); }
+
+  function showFormContent() {
+    const f = getForm(); const l = getLoading();
+    if (f) f.style.display = 'block';
+    if (l) l.style.display = 'none';
+    const email = document.getElementById('auth-email');
+    if (email) try { email.focus(); } catch (_) {}
+  }
+
+  function showLoadingState(text) {
+    const f = getForm(); const l = getLoading();
+    if (f) f.style.display = 'none';
+    if (l) l.style.display = 'block';
+    const t = document.getElementById('auth-loading-text');
+    if (t && text) t.textContent = text;
+  }
 
   function showWall() {
-    var w = getWall();
+    const w = getWall();
     w.style.opacity = '1';
     w.style.display = 'flex';
-    setCheckingState(false);
-    document.getElementById('auth-email').focus();
+    showFormContent();
   }
 
   function hideWall() {
-    var w = getWall();
+    const w = getWall();
     w.style.transition = 'opacity .45s ease';
     w.style.opacity = '0';
     setTimeout(function () {
@@ -33,23 +52,9 @@
     }, 460);
   }
 
-  function setCheckingState(on) {
-    var card = document.querySelector('.auth-card');
-    var msg = document.getElementById('auth-msg');
-    if (on) {
-      if (card) card.style.opacity = '0.45';
-      msg.textContent = 'Verificando sesión...';
-      msg.style.color = '#0AB9E6';
-      msg.style.background = 'rgba(10,185,230,.08)';
-      msg.style.display = 'block';
-    } else {
-      if (card) card.style.opacity = '1';
-      msg.style.display = 'none';
-    }
-  }
-
   function setMsg(msg, ok) {
     const el = document.getElementById('auth-msg');
+    if (!el) return;
     el.textContent = msg;
     el.style.color = ok ? '#25D366' : '#ff6b6b';
     el.style.background = ok ? 'rgba(37,211,102,.08)' : 'rgba(255,107,107,.08)';
@@ -67,15 +72,59 @@
     if (btn) { btn.style.display = 'flex'; btn.title = 'Cerrar sesión (' + email + ')'; }
   }
 
-  async function checkToken() {
+  async function fetchSiteVersion() {
+    try {
+      const res = await fetch(VERSION_URL + '?_=' + Date.now(), { cache: 'no-store' });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data && data.v != null ? String(data.v) : null;
+    } catch (_) { return null; }
+  }
+
+  async function checkVersionAndToken() {
     const token = localStorage.getItem(TOKEN_KEY);
-    if (!token) { showWall(); return; }
-    setCheckingState(true);
+    const storedVersion = localStorage.getItem(VERSION_KEY);
+
+    // No token at all → just show form
+    if (!token) {
+      const v = await fetchSiteVersion();
+      if (v) localStorage.setItem(VERSION_KEY, v);
+      showWall();
+      return;
+    }
+
+    // Token exists → keep loading state visible while we validate
+    showLoadingState('Verificando sesión');
+
+    const siteVersion = await fetchSiteVersion();
+
+    // If we got a version AND user had a stored version AND they differ → force logout
+    if (siteVersion && storedVersion && siteVersion !== storedVersion) {
+      localStorage.removeItem(TOKEN_KEY);
+      localStorage.setItem(VERSION_KEY, siteVersion);
+      showWall();
+      setMsg('Tu sesión expiró por una actualización del sitio. Vuelve a iniciar sesión.', true);
+      return;
+    }
+
+    // Update stored version (covers first-time and same-version cases)
+    if (siteVersion) localStorage.setItem(VERSION_KEY, siteVersion);
+
+    // Now validate token with server
     try {
       const res = await authCall({ action: 'check', token });
-      if (res.ok) { hideWall(); showLogoutBtn(res.email); }
-      else { localStorage.removeItem(TOKEN_KEY); showWall(); }
-    } catch (_) { localStorage.removeItem(TOKEN_KEY); showWall(); }
+      if (res.ok) {
+        hideWall();
+        showLogoutBtn(res.email);
+      } else {
+        localStorage.removeItem(TOKEN_KEY);
+        showWall();
+      }
+    } catch (_) {
+      // Network failure — be lenient: keep token, let user in
+      // (server will reject sensitive ops if token is invalid)
+      hideWall();
+    }
   }
 
   async function doLogin() {
@@ -87,6 +136,8 @@
       const res = await authCall({ action: 'login', email, password: pwd });
       if (res.ok) {
         localStorage.setItem(TOKEN_KEY, res.token);
+        const v = await fetchSiteVersion();
+        if (v) localStorage.setItem(VERSION_KEY, v);
         hideWall(); showLogoutBtn(res.email);
       } else if (res.error === 'no_aprobado') {
         setMsg('Tu cuenta aún no ha sido aprobada por el administrador.');
@@ -132,7 +183,9 @@
   }
 
   function init() {
-    checkToken();
+    // Decide what to show: if there's a token, keep loading state; otherwise jump straight to form
+    const hasToken = !!localStorage.getItem(TOKEN_KEY);
+    if (!hasToken) showFormContent();
 
     document.getElementById('auth-tab-login').addEventListener('click', () => switchTab('login'));
     document.getElementById('auth-tab-register').addEventListener('click', () => switchTab('register'));
@@ -155,6 +208,8 @@
         location.reload();
       });
     }
+
+    checkVersionAndToken();
   }
 
   if (document.readyState === 'loading') {

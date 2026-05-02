@@ -456,6 +456,10 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
 .auth-submit:active{transform:scale(.97);filter:brightness(.88);animation:none}
 .auth-submit:disabled{opacity:.55;animation:none;cursor:default}
 .auth-note{margin-top:20px;font-size:11px;color:rgba(255,255,255,.18);text-align:center;max-width:280px;line-height:1.6;position:relative;z-index:1}
+@keyframes authSpin{to{transform:rotate(360deg)}}
+.auth-spinner{width:38px;height:38px;border:3px solid rgba(10,185,230,.18);border-top-color:#0AB9E6;border-radius:50%;animation:authSpin .8s linear infinite;margin:6px auto 12px}
+#auth-loading{padding:8px 0 4px;text-align:center}
+#auth-loading-text{font-size:12px;color:rgba(10,185,230,.75);letter-spacing:1px;font-weight:700;text-transform:uppercase}
 #auth-particles{position:absolute;inset:0;pointer-events:none;z-index:0}
 </style>
 <!-- Google tag (gtag.js) -->
@@ -477,18 +481,24 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
       <h1>TS Epic Den</h1>
       <p>Acceso exclusivo</p>
     </div>
-    <div class="auth-tabs">
-      <button id="auth-tab-login" class="at-active">Iniciar sesión</button>
-      <button id="auth-tab-register">Registrarse</button>
+    <div id="auth-loading">
+      <div class="auth-spinner"></div>
+      <div id="auth-loading-text">Verificando sesión</div>
     </div>
-    <div class="auth-fields">
-      <input id="auth-email" class="auth-input" type="email" placeholder="Correo electrónico" autocomplete="email"/>
-      <input id="auth-pwd" class="auth-input" type="password" placeholder="Contraseña" autocomplete="current-password"/>
-      <div id="auth-pwd2-wrap" style="display:none">
-        <input id="auth-pwd2" class="auth-input" type="password" placeholder="Confirmar contraseña" autocomplete="new-password"/>
+    <div id="auth-form-content" style="display:none">
+      <div class="auth-tabs">
+        <button id="auth-tab-login" class="at-active">Iniciar sesión</button>
+        <button id="auth-tab-register">Registrarse</button>
       </div>
-      <div id="auth-msg" style="display:none;font-size:13px;text-align:center;padding:11px 14px;border-radius:10px;line-height:1.5"></div>
-      <button id="auth-submit-btn" class="auth-submit">Iniciar sesión</button>
+      <div class="auth-fields">
+        <input id="auth-email" class="auth-input" type="email" placeholder="Correo electrónico" autocomplete="email"/>
+        <input id="auth-pwd" class="auth-input" type="password" placeholder="Contraseña" autocomplete="current-password"/>
+        <div id="auth-pwd2-wrap" style="display:none">
+          <input id="auth-pwd2" class="auth-input" type="password" placeholder="Confirmar contraseña" autocomplete="new-password"/>
+        </div>
+        <div id="auth-msg" style="display:none;font-size:13px;text-align:center;padding:11px 14px;border-radius:10px;line-height:1.5"></div>
+        <button id="auth-submit-btn" class="auth-submit">Iniciar sesión</button>
+      </div>
     </div>
   </div>
   <p class="auth-note">Necesitas aprobación del administrador para acceder al catálogo</p>

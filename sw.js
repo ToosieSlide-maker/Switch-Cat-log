@@ -1,4 +1,4 @@
-const CACHE = 'ts-store-v9.5.0';
+const CACHE = 'ts-store-v9.6.0';
 const STATIC = [
   './index.html',
   './games.js',
@@ -27,12 +27,6 @@ self.addEventListener('activate', e=>{
 
 self.addEventListener('fetch', e=>{
   const url = new URL(e.request.url);
-
-  // Always go to network for version.json (force-logout signal)
-  if(url.pathname.endsWith('/version.json')){
-    e.respondWith(fetch(e.request).catch(()=>new Response('{"v":0}',{headers:{'Content-Type':'application/json'}})));
-    return;
-  }
 
   if(url.hostname === 'docs.google.com'){
     e.respondWith(

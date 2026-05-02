@@ -2,7 +2,7 @@
   const SCRIPT_URL = '/api/auth';
   const TOKEN_KEY = 'ts_auth_token';
   const VERSION_KEY = 'ts_site_version';
-  const VERSION_URL = 'version.json';
+  const VERSION_URL = 'sw.js';
   let currentTab = 'login';
 
   async function authCall(data) {
@@ -76,8 +76,9 @@
     try {
       const res = await fetch(VERSION_URL + '?_=' + Date.now(), { cache: 'no-store' });
       if (!res.ok) return null;
-      const data = await res.json();
-      return data && data.v != null ? String(data.v) : null;
+      const text = await res.text();
+      const m = text.match(/CACHE\s*=\s*['"]([^'"]+)['"]/);
+      return m ? m[1] : null;
     } catch (_) { return null; }
   }
 

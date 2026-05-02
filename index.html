@@ -445,6 +445,27 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
 </script>
 </head>
 <body>
+<!-- ===== AUTH WALL ===== -->
+<div id="auth-wall" style="display:flex;position:fixed;inset:0;z-index:10000;background:#0a0a14;flex-direction:column;align-items:center;justify-content:center;padding:24px 20px">
+  <img src="logo.png" alt="TS Epic Den" style="width:72px;height:72px;border-radius:18px;object-fit:contain;background:#000;padding:4px;margin-bottom:12px;box-shadow:0 4px 20px rgba(0,0,0,.6)"/>
+  <h1 style="font-size:20px;font-weight:900;color:#fff;margin-bottom:4px">TS Epic Den</h1>
+  <p style="font-size:12px;color:#555;margin-bottom:28px;letter-spacing:.3px">Acceso exclusivo</p>
+  <div style="display:flex;background:#1a1a2e;border-radius:14px;padding:4px;margin-bottom:20px;width:100%;max-width:320px;border:1px solid rgba(255,255,255,.06)">
+    <button id="auth-tab-login" style="flex:1;padding:10px;border:none;border-radius:10px;cursor:pointer;font-size:13px;font-weight:800;background:#0AB9E6;color:#fff;transition:all .2s;font-family:inherit">Iniciar sesión</button>
+    <button id="auth-tab-register" style="flex:1;padding:10px;border:none;border-radius:10px;cursor:pointer;font-size:13px;font-weight:800;background:transparent;color:#555;transition:all .2s;font-family:inherit">Registrarse</button>
+  </div>
+  <div style="width:100%;max-width:320px;display:flex;flex-direction:column;gap:11px">
+    <input id="auth-email" type="email" placeholder="Correo electrónico" autocomplete="email" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-size:14px;outline:none;font-family:inherit;transition:border-color .2s"/>
+    <input id="auth-pwd" type="password" placeholder="Contraseña" autocomplete="current-password" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-size:14px;outline:none;font-family:inherit;transition:border-color .2s"/>
+    <div id="auth-pwd2-wrap" style="display:none">
+      <input id="auth-pwd2" type="password" placeholder="Confirmar contraseña" autocomplete="new-password" style="width:100%;padding:14px 16px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-size:14px;outline:none;font-family:inherit"/>
+    </div>
+    <div id="auth-msg" style="display:none;font-size:13px;text-align:center;padding:11px 14px;border-radius:10px;line-height:1.5"></div>
+    <button id="auth-submit-btn" style="width:100%;padding:15px;border:none;border-radius:12px;background:linear-gradient(135deg,#0AB9E6,#0090b8);color:#fff;font-size:15px;font-weight:900;cursor:pointer;font-family:inherit;transition:filter .2s;box-shadow:0 4px 16px rgba(10,185,230,.3)">Iniciar sesión</button>
+  </div>
+  <p style="margin-top:22px;font-size:11px;color:#3a3a5a;text-align:center;max-width:280px;line-height:1.5">Necesitas aprobación del administrador para acceder al catálogo</p>
+</div>
+<!-- ===== FIN AUTH WALL ===== -->
 <div id="pwa-banner">
   <img id="pwa-banner-icon" src="logo.png" alt="TS Epic Den" onerror="this.style.display='none'"/>
   <div id="pwa-banner-txt">
@@ -467,6 +488,9 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
   <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
   <div id="hfav-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#e63946;color:#fff;font-size:10px;font-weight:900;min-width:18px;height:18px;border-radius:50%;align-items:center;justify-content:center;border:2px solid #0a0a14"></div>
 </button>
+  <button id="auth-logout-btn" title="" style="display:none;padding:0;width:44px;height:44px;border-radius:50%;background:transparent;border:none;cursor:pointer;-webkit-tap-highlight-color:transparent;align-items:center;justify-content:center;color:rgba(255,255,255,.35);transition:color .2s">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+  </button>
   <button class="btnall btn-lista empty" id="hcart-btn" onclick="openCart()" style="display:none;padding:0;width:44px;height:44px;border-radius:50%;background:transparent;-webkit-tap-highlight-color:transparent">
   <div style="position:relative;display:flex;align-items:center;justify-content:center">
     <svg id="hcart-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -1539,6 +1563,7 @@ history.replaceState({tab:'juegos'},'');
   });
 })();
 </script>
-<script src="noticias.js"></script>    
+<script src="noticias.js"></script>
+<script src="auth.js"></script>
 </body>
 </html>

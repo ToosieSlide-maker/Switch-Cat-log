@@ -32,6 +32,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", router);
 
+app.get("/", (_req, res) => res.redirect("/Switch-Cat-log/"));
+
 const siteRoot = path.resolve("/home/runner/workspace");
 app.use("/Switch-Cat-log", express.static(siteRoot));
 app.get("/Switch-Cat-log", (_req, res) => {

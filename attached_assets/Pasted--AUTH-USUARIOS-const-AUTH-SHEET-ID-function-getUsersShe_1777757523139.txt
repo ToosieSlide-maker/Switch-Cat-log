@@ -1,0 +1,90 @@
+// ===== AUTH USUARIOS =====
+const AUTH_SHEET_ID = '';
+
+function getUsersSheet() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  let sh = ss.getSheetByName('Usuarios');
+  if (!sh) {
+    sh = ss.insertSheet('Usuarios');
+    sh.appendRow(['Email','PasswordHash','FechaRegistro','Verificado','Token']);
+    sh.getRange(1,1,1,5).setFontWeight('bold');
+  }
+  return sh;
+}
+
+function hashPwd(p) {
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, p)
+    .map(b => (b < 0 ? b+256 : b).toString(16).padStart(2,'0')).join('');
+}
+
+function doPost(e) {
+  try {
+    const d = JSON.parse(e.postData.contents);
+    if (d.action === 'register') return authRegister(d);
+    if (d.action === 'login')    return authLogin(d);
+    if (d.action === 'check')    return authCheck(d);
+    return authJSON({error:'accion_desconocida'});
+  } catch(err) {
+    return authJSON({error:'error_servidor', detail: err.toString()});
+  }
+}
+
+function authRegister(d) {
+  const email = (d.email||'').toLowerCase().trim();
+  const pwd   = d.password || '';
+  if (!email || !pwd) return authJSON({error:'datos_incompletos'});
+
+  const sh   = getUsersSheet();
+  const rows = sh.getDataRange().getValues();
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][0].toString().toLowerCase() === email)
+      return authJSON({error:'email_existe'});
+  }
+  sh.appendRow([email, hashPwd(pwd), new Date().toISOString(), '', '']);
+  return authJSON({ok: true});
+}
+
+function authLogin(d) {
+  const email = (d.email||'').toLowerCase().trim();
+  const pwd   = d.password || '';
+  if (!email || !pwd) return authJSON({error:'datos_incompletos'});
+
+  const sh   = getUsersSheet();
+  const rows = sh.getDataRange().getValues();
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][0].toString().toLowerCase() !== email) continue;
+    if (rows[i][1].toString() !== hashPwd(pwd))
+      return authJSON({error:'credenciales_invalidas'});
+
+    const v = rows[i][3].toString().toUpperCase().trim();
+    if (v !== 'SÍ' && v !== 'SI' && v !== 'TRUE' && v !== '1')
+      return authJSON({error:'no_aprobado'});
+
+    const token = Utilities.getUuid();
+    sh.getRange(i+1, 5).setValue(token);
+    return authJSON({ok: true, token, email});
+  }
+  return authJSON({error:'credenciales_invalidas'});
+}
+
+function authCheck(d) {
+  const token = d.token || '';
+  if (!token) return authJSON({error:'sin_token'});
+
+  const sh   = getUsersSheet();
+  const rows = sh.getDataRange().getValues();
+  for (let i = 1; i < rows.length; i++) {
+    if (rows[i][4].toString() !== token) continue;
+    const v = rows[i][3].toString().toUpperCase().trim();
+    if (v !== 'SÍ' && v !== 'SI' && v !== 'TRUE' && v !== '1')
+      return authJSON({error:'no_aprobado'});
+    return authJSON({ok: true, email: rows[i][0].toString()});
+  }
+  return authJSON({error:'token_invalido'});
+}
+
+function authJSON(obj) {
+  return ContentService.createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+// ===== FIN AUTH =====

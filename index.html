@@ -462,10 +462,12 @@ footer{text-align:center;padding:20px;color:#1e1e2e;font-size:11px;margin-top:8p
 #auth-loading-text{font-size:12px;color:rgba(10,185,230,.75);letter-spacing:1px;font-weight:700;text-transform:uppercase}
 .pwd-wrap{position:relative;width:100%}
 .pwd-wrap .auth-input{padding-right:46px}
-.pwd-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.45);transition:color .2s,transform .15s;border-radius:8px}
+.pwd-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:8px;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.45);transition:color .2s,transform .15s;border-radius:8px;-webkit-tap-highlight-color:transparent;outline:none;-webkit-appearance:none;appearance:none}
 .pwd-toggle:hover{color:#0AB9E6}
+.pwd-toggle:focus{outline:none}
+.pwd-toggle:focus-visible{outline:2px solid rgba(10,185,230,.5);outline-offset:2px}
 .pwd-toggle:active{transform:translateY(-50%) scale(.88)}
-.pwd-toggle svg{width:20px;height:20px;display:block}
+.pwd-toggle svg{width:20px;height:20px;display:block;pointer-events:none}
 #auth-particles{position:absolute;inset:0;pointer-events:none;z-index:0}
 </style>
 <!-- Google tag (gtag.js) -->

@@ -41,10 +41,21 @@
     if (t && text) t.textContent = text;
   }
 
+  function lockBodyScroll() {
+    document.documentElement.classList.add('auth-locked');
+    document.body.classList.add('auth-locked');
+  }
+
+  function unlockBodyScroll() {
+    document.documentElement.classList.remove('auth-locked');
+    document.body.classList.remove('auth-locked');
+  }
+
   function showWall() {
     const w = getWall();
     w.style.opacity = '1';
     w.style.display = 'flex';
+    lockBodyScroll();
     showFormContent();
   }
 
@@ -56,6 +67,7 @@
       w.style.display = 'none';
       w.style.opacity = '1';
       w.style.transition = '';
+      unlockBodyScroll();
     }, 460);
   }
 
@@ -216,12 +228,15 @@
       const targetId = btn.getAttribute('data-target');
       const input = document.getElementById(targetId);
       if (!input) return;
+      const wasFocused = document.activeElement === input;
       const showing = input.type === 'text';
       input.type = showing ? 'password' : 'text';
       btn.setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
       btn.innerHTML = showing ? EYE_OPEN : EYE_OFF;
-      // Keep keyboard up & cursor in input on mobile after toggle
-      try { input.focus({ preventScroll: true }); } catch (_) { input.focus(); }
+      // Only re-focus if it was already focused (avoid forcing keyboard open)
+      if (wasFocused) {
+        try { input.focus({ preventScroll: true }); } catch (_) { input.focus(); }
+      }
     }
     // Use pointerdown so it fires BEFORE focus changes / keyboard dismiss on Android
     let lastPwdToggleTs = 0;

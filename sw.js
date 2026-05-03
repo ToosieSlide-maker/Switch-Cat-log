@@ -1,4 +1,4 @@
-const CACHE = 'ts-store-v9.7.0';
+const CACHE = 'ts-store-v9.8.0';
 const STATIC = [
   './index.html',
   './games.js',
@@ -59,6 +59,26 @@ self.addEventListener('fetch', e=>{
     return;
   }
 
+  // Network-first for HTML, auth.js, games.js, sw.js itself — so updates always reach users
+  const path = url.pathname;
+  const isCritical = path.endsWith('/auth.js') || path.endsWith('/games.js')
+    || path.endsWith('/index.html') || path.endsWith('/sw.js')
+    || path === '/' || path.endsWith('/Switch-Cat-log/') || path.endsWith('/Switch-Cat-log');
+
+  if(isCritical){
+    e.respondWith(
+      fetch(e.request).then(res=>{
+        if(res.ok){
+          const resClone = res.clone();
+          caches.open(CACHE).then(c=>c.put(e.request, resClone));
+        }
+        return res;
+      }).catch(()=>caches.match(e.request))
+    );
+    return;
+  }
+
+  // Cache-first for everything else (images, manifest, icons)
   e.respondWith(
     caches.match(e.request).then(cached=>
       cached || fetch(e.request).then(res=>{

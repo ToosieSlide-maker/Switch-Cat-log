@@ -162,7 +162,7 @@
   const v = await fetchSiteVersion();
   if (v) localStorage.setItem(VERSION_KEY, v);
  hideWall(); showLogoutBtn(res.email);
-  sessionStorage.setItem('ts_welcome_pending', res.email);
+  localStorage.setItem('ts_welcome_pending', res.email);
   showWelcomeModal(res.email);
   } else if (res.error === 'no_aprobado') {
         setMsg('Tu cuenta aún no ha sido aprobada por el administrador.');
@@ -219,7 +219,7 @@
   document.getElementById('welcome-btn').onclick = function () {
    window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg), '_blank');
     overlay.style.display = 'none';
-   sessionStorage.removeItem('ts_welcome_pending');
+   localStorage.removeItem('ts_welcome_pending');
     document.body.classList.remove('welcome-active');
     document.documentElement.classList.remove('welcome-active');
   };

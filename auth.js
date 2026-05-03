@@ -214,9 +214,6 @@
     window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg), '_blank');
     overlay.style.display = 'none';
   };
-  document.getElementById('welcome-skip').onclick = function () {
-    overlay.style.display = 'none';
-  };
 }
 
   function init() {

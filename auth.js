@@ -155,11 +155,12 @@
     try {
       const res = await authCall({ action: 'login', email, password: pwd });
       if (res.ok) {
-        localStorage.setItem(TOKEN_KEY, res.token);
-        const v = await fetchSiteVersion();
-        if (v) localStorage.setItem(VERSION_KEY, v);
-        hideWall(); showLogoutBtn(res.email);
-      } else if (res.error === 'no_aprobado') {
+  localStorage.setItem(TOKEN_KEY, res.token);
+  const v = await fetchSiteVersion();
+  if (v) localStorage.setItem(VERSION_KEY, v);
+  hideWall(); showLogoutBtn(res.email);
+  showWelcomeModal(res.email);
+  } else if (res.error === 'no_aprobado') {
         setMsg('Tu cuenta aún no ha sido aprobada por el administrador.');
       } else {
         setMsg('Correo o contraseña incorrectos. Si no tienes cuenta, presiona "Registrarse" arriba.');
@@ -201,6 +202,22 @@
     tl.classList.toggle('at-active', !isReg);
     tr.classList.toggle('at-active', isReg);
   }
+  function showWelcomeModal(email) {
+  const overlay = document.getElementById('welcome-overlay');
+  if (!overlay) return;
+  const emailEl = document.getElementById('welcome-email');
+  if (emailEl) emailEl.textContent = email;
+  overlay.style.display = 'flex';
+  const waNum = (window.WA) || '5355207586';
+  const msg = '👋 Hola TS Epic Den, acabo de iniciar sesión en el catálogo con el correo: *' + email + '*. ¡Listo para comprar! 🎮';
+  document.getElementById('welcome-btn').onclick = function () {
+    window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg), '_blank');
+    overlay.style.display = 'none';
+  };
+  document.getElementById('welcome-skip').onclick = function () {
+    overlay.style.display = 'none';
+  };
+}
 
   function init() {
     // Decide what to show: if there's a token, keep loading state; otherwise jump straight to form

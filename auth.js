@@ -1,15 +1,22 @@
 (function () {
-  const SCRIPT_URL = '/api/auth';
+  const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxQPLu4QSVJaZp2rJ3Yc5r59jc4KmbwQ7qXL5tAWA5VuJXuYeHDW335g8CYArvLMQdNdw/exec';
+  const isLocalDev = /^(localhost|127\.0\.0\.1|.*\.replit\.dev|.*\.repl\.co)$/i.test(location.hostname);
+  const SCRIPT_URL = isLocalDev ? '/api/auth' : APPS_SCRIPT_URL;
   const TOKEN_KEY = 'ts_auth_token';
   const VERSION_KEY = 'ts_site_version';
   const VERSION_URL = 'sw.js';
   let currentTab = 'login';
 
   async function authCall(data) {
+    // Use text/plain when calling Apps Script directly to avoid CORS preflight
+    const headers = isLocalDev
+      ? { 'Content-Type': 'application/json' }
+      : { 'Content-Type': 'text/plain;charset=utf-8' };
     const res = await fetch(SCRIPT_URL, {
       method: 'POST',
       body: JSON.stringify(data),
-      headers: { 'Content-Type': 'application/json' }
+      headers: headers,
+      redirect: 'follow'
     });
     return res.json();
   }
@@ -143,7 +150,7 @@
       } else if (res.error === 'no_aprobado') {
         setMsg('Tu cuenta aún no ha sido aprobada por el administrador.');
       } else {
-        setMsg('Correo o contraseña incorrectos.');
+        setMsg('Correo o contraseña incorrectos. Si no tienes cuenta, presiona "Registrarse" arriba.');
       }
     } catch (_) { setMsg('Error de conexión. Intenta de nuevo.'); }
     finally { setLoading(false, 'Iniciar sesión'); }

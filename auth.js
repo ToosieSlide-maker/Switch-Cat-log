@@ -133,10 +133,13 @@
     // Now validate token with server
     try {
       const res = await authCall({ action: 'check', token });
-      if (res.ok) {
+     if (res.ok) {
         hideWall();
         showLogoutBtn(res.email);
-      } else {
+        const pending = sessionStorage.getItem('ts_welcome_pending');
+        if (pending) showWelcomeModal(pending);
+      }
+    else {
         localStorage.removeItem(TOKEN_KEY);
         showWall();
       }
@@ -158,7 +161,8 @@
   localStorage.setItem(TOKEN_KEY, res.token);
   const v = await fetchSiteVersion();
   if (v) localStorage.setItem(VERSION_KEY, v);
-  hideWall(); showLogoutBtn(res.email);
+ hideWall(); showLogoutBtn(res.email);
+  sessionStorage.setItem('ts_welcome_pending', res.email);
   showWelcomeModal(res.email);
   } else if (res.error === 'no_aprobado') {
         setMsg('Tu cuenta aún no ha sido aprobada por el administrador.');
@@ -215,6 +219,7 @@
   document.getElementById('welcome-btn').onclick = function () {
    window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg), '_blank');
     overlay.style.display = 'none';
+   sessionStorage.removeItem('ts_welcome_pending');
     document.body.classList.remove('welcome-active');
     document.documentElement.classList.remove('welcome-active');
   };

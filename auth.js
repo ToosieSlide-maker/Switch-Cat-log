@@ -220,16 +220,29 @@
       input.type = showing ? 'password' : 'text';
       btn.setAttribute('aria-label', showing ? 'Mostrar contraseña' : 'Ocultar contraseña');
       btn.innerHTML = showing ? EYE_OPEN : EYE_OFF;
+      // Keep keyboard up & cursor in input on mobile after toggle
+      try { input.focus({ preventScroll: true }); } catch (_) { input.focus(); }
     }
-    // Event delegation: works even if buttons are added later or hidden at init time
-    document.addEventListener('click', function (e) {
+    // Use pointerdown so it fires BEFORE focus changes / keyboard dismiss on Android
+    let lastPwdToggleTs = 0;
+    function handlePwdToggle(e) {
       const btn = e.target && e.target.closest && e.target.closest('.pwd-toggle');
-      if (btn) {
-        e.preventDefault();
-        e.stopPropagation();
-        togglePwdVisibility(btn);
-      }
-    });
+      if (!btn) return;
+      // Debounce: dedupe pointerdown + click on devices that fire both
+      const now = Date.now();
+      if (now - lastPwdToggleTs < 400) { e.preventDefault(); return; }
+      lastPwdToggleTs = now;
+      e.preventDefault();
+      e.stopPropagation();
+      togglePwdVisibility(btn);
+    }
+    if (window.PointerEvent) {
+      document.addEventListener('pointerdown', handlePwdToggle);
+    } else {
+      document.addEventListener('touchstart', handlePwdToggle, { passive: false });
+    }
+    // Fallback for any environment that didn't fire pointerdown
+    document.addEventListener('click', handlePwdToggle);
 
     const logoutBtn = document.getElementById('auth-logout-btn');
     if (logoutBtn) {

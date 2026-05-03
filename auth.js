@@ -209,12 +209,14 @@
   if (emailEl) emailEl.textContent = email;
   overlay.style.display = 'flex';
   document.body.classList.add('welcome-active');
+  document.documentElement.classList.add('welcome-active');
   const waNum = (window.WA) || '5355207586';
   const msg = '👋 Hola TS Epic Den, acabo de iniciar sesión en el catálogo con el correo: *' + email + '*. ¡Listo para comprar! 🎮';
   document.getElementById('welcome-btn').onclick = function () {
    window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg), '_blank');
     overlay.style.display = 'none';
     document.body.classList.remove('welcome-active');
+    document.documentElement.classList.remove('welcome-active');
   };
 }
 

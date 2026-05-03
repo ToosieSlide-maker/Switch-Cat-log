@@ -136,8 +136,7 @@
      if (res.ok) {
         hideWall();
         showLogoutBtn(res.email);
-        const pending = sessionStorage.getItem('ts_welcome_pending');
-        if (pending) showWelcomeModal(pending);
+        if (res.whatsapp_ok === false) showWelcomeModal(res.email);
       }
     else {
         localStorage.removeItem(TOKEN_KEY);
@@ -162,8 +161,7 @@
   const v = await fetchSiteVersion();
   if (v) localStorage.setItem(VERSION_KEY, v);
  hideWall(); showLogoutBtn(res.email);
-  localStorage.setItem('ts_welcome_pending', res.email);
-  showWelcomeModal(res.email);
+  if (res.whatsapp_ok === false) showWelcomeModal(res.email);
   } else if (res.error === 'no_aprobado') {
         setMsg('Tu cuenta aún no ha sido aprobada por el administrador.');
       } else {
@@ -216,10 +214,13 @@
   document.documentElement.classList.add('welcome-active');
   const waNum = (window.WA) || '5355207586';
   const msg = '👋 Hola TS Epic Den, acabo de iniciar sesión en el catálogo con el correo: *' + email + '*. ¡Listo para comprar! 🎮';
-  document.getElementById('welcome-btn').onclick = function () {
-   window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg), '_blank');
+ document.getElementById('welcome-btn').onclick = async function () {
+    const token = localStorage.getItem('ts_auth_token');
+    if (token) {
+      try { await authCall({ action: 'whatsapp_confirm', token }); } catch(_) {}
+    }
+    window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg), '_blank');
     overlay.style.display = 'none';
-   localStorage.removeItem('ts_welcome_pending');
     document.body.classList.remove('welcome-active');
     document.documentElement.classList.remove('welcome-active');
   };

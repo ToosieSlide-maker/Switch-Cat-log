@@ -231,39 +231,33 @@
     document.documentElement.classList.remove('welcome-active');
   };
 }
-  function showWAGate(email) {
+ function showWAGate(email) {
   showFormContent();
   const f = getForm();
   if (!f) return;
   const waNum = (window.WA) || '5355207586';
   const msg = '\uD83D\uDC4B Hola TS Epic Den, acabo de iniciar sesi\u00F3n en el cat\u00E1logo con el correo: *' + email + '*. \u00A1Listo para comprar! \uD83C\uDFAE';
+
   f.innerHTML =
-    '<div style="text-align:center;padding:8px 0">' +
-      '<div style="font-size:36px;margin-bottom:14px">\uD83D\uDCF2</div>' +
-      '<div style="font-size:17px;font-weight:900;color:#fff;margin-bottom:8px">Un paso m\u00E1s</div>' +
-      '<div style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:6px">' +
-        'Para activar tu acceso al cat\u00E1logo,<br>conf\u00EDrmanos por WhatsApp.' +
+    '<div style="text-align:center">' +
+      '<img src="logo.png" alt="TS Epic Den" style="width:64px;height:64px;border-radius:16px;object-fit:contain;background:#000;padding:3px;margin-bottom:16px"/>' +
+      '<div style="font-size:20px;font-weight:900;color:#fff;margin-bottom:8px">\u00A1Bienvenido al cat\u00E1logo! \uD83C\uDFAE</div>' +
+      '<div style="font-size:13px;color:rgba(255,255,255,.6);line-height:1.7;margin-bottom:20px">Este cat\u00E1logo es <strong style="color:#fff">exclusivo para clientes de TS Epic Den</strong>.<br/>Para mantener tu acceso activo, realiza tus compras directamente con nosotros por WhatsApp.</div>' +
+      '<div style="font-size:11px;color:rgba(10,185,230,.7);background:rgba(10,185,230,.07);border:1px solid rgba(10,185,230,.15);border-radius:10px;padding:10px 14px;margin-bottom:20px;line-height:1.6">' +
+        '\uD83D\uDCE7 Ingresaste como:<br/><span style="font-weight:800;color:#0AB9E6;font-size:12px">' + email + '</span>' +
       '</div>' +
-      '<div style="font-size:11px;color:rgba(10,185,230,.7);background:rgba(10,185,230,.07);border:1px solid rgba(10,185,230,.15);border-radius:10px;padding:9px 12px;margin-bottom:18px;line-height:1.6">' +
-        '\uD83D\uDCE7 Acceso como:<br>' +
-        '<span style="font-weight:800;color:#0AB9E6;font-size:12px">' + email + '</span>' +
-      '</div>' +
-      '<button id="wa-gate-btn" style="width:100%;padding:15px;border:none;border-radius:12px;background:#25D366;color:#fff;font-size:15px;font-weight:900;cursor:pointer;box-shadow:0 4px 18px rgba(37,211,102,.35);font-family:inherit;transition:filter .2s">' +
-        '\uD83D\uDCF2 Confirmar por WhatsApp' +
-      '</button>' +
-      '<div id="wa-gate-status" style="margin-top:12px;font-size:12px;color:rgba(255,255,255,.3);min-height:18px"></div>' +
+      '<button id="wa-gate-btn" style="width:100%;padding:15px;border:none;border-radius:12px;background:#25D366;color:#fff;font-size:14px;font-weight:900;cursor:pointer;box-shadow:0 4px 18px rgba(37,211,102,.35);margin-bottom:12px;font-family:inherit">\uD83D\uDCF2 Confirmar por WhatsApp</button>' +
     '</div>';
 
   document.getElementById('wa-gate-btn').onclick = async function () {
     this.disabled = true;
-    this.textContent = '...';
-    const statusEl = document.getElementById('wa-gate-status');
+    this.textContent = 'Abriendo WhatsApp...';
+    // window.open PRIMERO — antes de cualquier await para preservar el gesto del usuario
+    window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg), '_blank');
     const token = localStorage.getItem(TOKEN_KEY);
     if (token) {
       try { await authCall({ action: 'whatsapp_confirm', token }); } catch (_) {}
     }
-    window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(msg), '_blank');
-    if (statusEl) statusEl.textContent = 'Redirigiendo...';
     hideWall();
   };
 }
